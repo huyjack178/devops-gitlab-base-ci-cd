@@ -1,5 +1,6 @@
 publish_npm:
     stage: publish
+    image: node:14
     needs: ["sonarqube-check"]
     before_script:
         - apt-get update
