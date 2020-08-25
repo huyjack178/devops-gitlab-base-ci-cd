@@ -17,10 +17,3 @@ sonarqube-check:
     script:
         - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=$PROJECT_NAME -Dsonar.sources=.
     allow_failure: true
-    rules:
-    - if: '$CI_COMMIT_TAG =~ /^publish-*/'
-      when: always
-    - if: '$CI_COMMIT_TAG =~ /^deploy-*/'
-      when: always
-    - if: '$CI_COMMIT_BRANCH == "master"'
-      when: always
