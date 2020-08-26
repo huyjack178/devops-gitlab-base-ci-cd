@@ -15,7 +15,5 @@ publish_npm:
     tags:
         - docker
     rules:
-        - if: '$CI_COMMIT_BRANCH =~ /^dev-*/'
-          when: manual
         - if: '$CI_COMMIT_BRANCH == "master"'
           when: always
