@@ -13,6 +13,6 @@ sonarqube-check:
     before_script:
         - echo "===========Start Sonar Scanner============="
     script:
-        - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=$PROJECT_NAME -Dsonar.branch.name="${CI_COMMIT_BRANCH}" -Dsonar.sources=.
+        - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=$PROJECT_NAME -Dsonar.branch.name="${CI_COMMIT_BRANCH}" -Dsonar.projectVersion="${CI_COMMIT_REF_NAME}[${CI_JOB_ID}]" -Dsonar.sources=.
     allow_failure: true
 
