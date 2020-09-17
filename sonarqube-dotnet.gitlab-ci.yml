@@ -14,7 +14,7 @@ sonarqube-check:
         - dotnet tool install --global dotnet-sonarscanner
         - export PATH="$PATH:/root/.dotnet/tools"
         - apt-get update
-        - apt-get install software-properties-common
+        - apt-get install -y software-properties-common
         - add-apt-repository ppa:openjdk-r/ppa
         - add-apt-repository ppa:webupd8team/java
         - apt-get update
