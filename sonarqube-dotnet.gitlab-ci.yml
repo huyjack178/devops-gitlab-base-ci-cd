@@ -9,7 +9,7 @@ cache:
 sonarqube-check:
     stage: test
     image:
-        name: mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
+        name: mcr.microsoft.com/dotnet/core/sdk:3.1
     before_script:
         - dotnet tool install --global dotnet-sonarscanner
         - export PATH="$PATH:/root/.dotnet/tools"
