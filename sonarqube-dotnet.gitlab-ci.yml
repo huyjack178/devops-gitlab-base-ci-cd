@@ -15,5 +15,5 @@ sonarqube-check:
         - export PATH="$PATH:/root/.dotnet/tools"
         - echo "===========Start Sonar Scanner============="
     script:
-        - dotnet sonarscanner begin /k:$PROJECT_NAME /v:"${CI_COMMIT_REF_NAME} ($CI_COMMIT_SHORT_SHA) [${CI_JOB_ID}]" /d:sonar.login=$SONAR_TOKEN
+        - dotnet sonarscanner begin /k:$PROJECT_NAME /v:"${CI_COMMIT_REF_NAME} ($CI_COMMIT_SHORT_SHA) [${CI_JOB_ID}]" /d:sonar.login=$SONAR_TOKEN /d:sonar.host.url=$SONAR_HOST_URL
     allow_failure: true
