@@ -9,10 +9,19 @@ cache:
 sonarqube-check:
     stage: test
     image:
-        name: mcr.microsoft.com/dotnet/core/sdk:3.1
+        name: mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
     before_script:
         - dotnet tool install --global dotnet-sonarscanner
         - export PATH="$PATH:/root/.dotnet/tools"
+        - apt-get update
+        - apt-get install -y openjdk-8-jdk
+        - apt-get install -y ant
+        - apt-get clean
+        - apt-get update
+        - apt-get install ca-certificates-java
+        - apt-get clean
+        - update-ca-certificates -f
+        - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
         - echo "===========Start Sonar Scanner============="
     script:
         - dotnet sonarscanner begin /k:$PROJECT_NAME /v:"${CI_COMMIT_REF_NAME} ($CI_COMMIT_SHORT_SHA) [${CI_JOB_ID}]" /d:sonar.login=$SONAR_TOKEN /d:sonar.host.url=$SONAR_HOST_URL
