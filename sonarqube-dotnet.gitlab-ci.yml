@@ -1,0 +1,18 @@
+variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar" # Defines the location of the analysis task cache
+    GIT_DEPTH: 0 # Tells git to fetch all the branches of the project, required by the analysis task
+cache:
+    key: ${CI_JOB_NAME}
+    paths:
+        - .sonar/cache
+
+sonarqube-check:
+    stage: test
+    image:
+        name: mcr.microsoft.com/dotnet/core/sdk:3.1
+    before_script:
+        - dotnet tool install --global dotnet-sonarscanner
+        - echo "===========Start Sonar Scanner============="
+    script:
+        - dotnet sonarscanner begin /k:$PROJECT_NAME /v:"${CI_COMMIT_REF_NAME} ($CI_COMMIT_SHORT_SHA) [${CI_JOB_ID}]" /d:sonar.login=$SONAR_TOKEN
+    allow_failure: true
