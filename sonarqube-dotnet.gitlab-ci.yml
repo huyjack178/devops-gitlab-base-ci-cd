@@ -13,6 +13,7 @@ sonarqube-check:
     before_script:
         - dotnet tool install --global dotnet-sonarscanner
         - export PATH="$PATH:/root/.dotnet/tools"
+        - apt-get install software-properties-common
         - add-apt-repository ppa:openjdk-r/ppa
         - add-apt-repository ppa:webupd8team/java
         - apt-get update
