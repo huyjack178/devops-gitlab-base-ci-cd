@@ -12,6 +12,7 @@ sonarqube-check:
         name: mcr.microsoft.com/dotnet/core/sdk:3.1
     before_script:
         - dotnet tool install --global dotnet-sonarscanner
+        - export PATH="$PATH:/root/.dotnet/tools"
         - echo "===========Start Sonar Scanner============="
     script:
         - dotnet sonarscanner begin /k:$PROJECT_NAME /v:"${CI_COMMIT_REF_NAME} ($CI_COMMIT_SHORT_SHA) [${CI_JOB_ID}]" /d:sonar.login=$SONAR_TOKEN
