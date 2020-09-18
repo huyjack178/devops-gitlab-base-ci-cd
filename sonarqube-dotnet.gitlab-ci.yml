@@ -8,6 +8,7 @@ cache:
 
 sonarqube-check:
     stage: test
+    images: git3.nexdev.net:5050/lumi-ops/docker-images/java-dotnet
     before_script:
         - export PATH="$PATH:/root/.dotnet/tools"
         - echo "===========Start Sonar Scanner============="
