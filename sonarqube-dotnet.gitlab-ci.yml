@@ -19,5 +19,3 @@ sonarqube-check:
         - dotnet build $SOLUTION_NAME
         - dotnet sonarscanner end /d:sonar.login=$SONAR_TOKEN
     allow_failure: true
-    tags:
-        - linux
