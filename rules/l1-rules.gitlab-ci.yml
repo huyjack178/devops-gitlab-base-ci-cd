@@ -67,3 +67,8 @@
     rules:
         - <<: *if-deploy-prod
           when: manual
+          
+.deploy:prod-auto:rules:
+    rules:
+        - <<: *if-deploy-prod
+          when: always
