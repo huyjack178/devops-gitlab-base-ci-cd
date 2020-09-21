@@ -1,5 +1,5 @@
 before_script:
-  - docker info
+#  - docker info
   - echo $CURRENT_TAG
   - if echo "$CI_COMMIT_TAG" | grep -q "$CURRENT_TAG";
     then
