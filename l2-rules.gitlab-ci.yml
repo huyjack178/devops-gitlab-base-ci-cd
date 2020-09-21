@@ -1,0 +1,69 @@
+.if-deploy-all: &if-deploy-all
+    if: '$CI_COMMIT_TAG =~ /^l2-deploy-\d{8}-\d+.*$/'
+
+.if-deploy-local: &if-deploy-local
+    if: '$CI_COMMIT_TAG =~ /^l2-deploy-local-\d{8}-\d+.*$/'
+
+.if-deploy-sit: &if-deploy-sit
+    if: '$CI_COMMIT_TAG =~ /^l2-deploy-sit-\d{8}-\d+.*$/'
+
+.if-deploy-uat: &if-deploy-uat
+    if: '$CI_COMMIT_TAG =~ /^l2-deploy-uat-\d{8}-\d+.*$/'
+
+.if-deploy-prod: &if-deploy-prod
+    if: '$CI_COMMIT_BRANCH == "master"'
+
+.build:image:rules:
+    rules:
+        - <<: *if-deploy-local
+          when: always
+        - <<: *if-deploy-all
+          when: always
+        - <<: *if-deploy-sit
+          when: always
+        - <<: *if-deploy-uat
+          when: always
+        - <<: *if-deploy-prod
+          when: manual
+
+.post-deploy:generate-changelog:rules:
+  rules:
+      - <<: *if-deploy-local
+        when: on_success
+      - <<: *if-deploy-all
+        when: on_success
+      - <<: *if-deploy-sit
+        when: on_success
+      - <<: *if-deploy-uat
+        when: on_success
+      - <<: *if-deploy-prod
+        when: on_success
+
+.deploy:local:rules:
+    rules:
+        - <<: *if-deploy-local
+          when: on_success
+        - <<: *if-deploy-all
+          when: on_success
+        - when: never
+  
+.deploy:sit:rules:
+    rules:
+        - <<: *if-deploy-sit
+          when: on_success
+        - <<: *if-deploy-all
+          when: on_success
+        - when: never
+
+.deploy:uat:rules:
+    rules:
+        - <<: *if-deploy-uat
+          when: on_success
+        - <<: *if-deploy-all
+          when: on_success
+        - when: never
+
+.deploy:prod:rules:
+    rules:
+        - <<: *if-deploy-prod
+          when: manual
