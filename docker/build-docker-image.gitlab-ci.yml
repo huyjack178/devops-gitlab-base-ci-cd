@@ -9,7 +9,7 @@ build_image:
           --pull
           -f Dockerfile 
           --tag $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION 
-          --cache-from $CI_REGISTRY_IMAGE:latest .
+          --cache-from $CI_REGISTRY_IMAGE:latest $DOCKER_FILE_PATH
         - docker push $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION
         - docker tag $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $CI_REGISTRY_IMAGE:latest
         - docker push $CI_REGISTRY_IMAGE:latest
