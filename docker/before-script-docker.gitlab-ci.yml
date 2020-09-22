@@ -23,4 +23,10 @@ before_script:
   - export CI_REGISTRY_IMAGE_VERSION=${CI_COMMIT_SHA:0:8}
   - echo $CI_REGISTRY_IMAGE
   - export CONFIG_FILE=$CONFIG_FILE_NAME.${DEPLOY_ENV}.$CONFIG_FILE_EXTENSION
-  - export DOCKER_FILE_PATH=$DOCKER_FILE_PATH
+  - if [ "$DOCKER_FILE_PATH" == "" ];
+    then
+      export DOCKER_FILE_PATH=".";
+    else
+      export DOCKER_FILE_PATH=$DOCKER_FILE_PATH;
+    fi
+  - echo $DOCKER_FILE_PATH
