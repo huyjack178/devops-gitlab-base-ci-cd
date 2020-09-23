@@ -5,7 +5,8 @@
       "(docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL)
       && docker pull $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION
       && (docker rm -f $DOCKER_SERVICE_NAME-$DEPLOY_ENV || true)
-      && docker run --restart=always --name $DOCKER_SERVICE_NAME-$DEPLOY_ENV -p $DOCKER_PUBLIC_PORT:$DOCKER_PRIVATE_PORT -d $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION"
+      && (docker network create $DOCKER_NETWORK_NAME || true)
+      && docker run --restart=always --name $DOCKER_SERVICE_NAME-$DEPLOY_ENV --network $DOCKER_NETWORK_NAME -p $DOCKER_PUBLIC_PORT:$DOCKER_PRIVATE_PORT -d $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION"
   tags:
     - docker
 
