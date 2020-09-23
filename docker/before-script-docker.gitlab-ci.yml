@@ -37,4 +37,11 @@ before_script:
     else
       export DOCKER_FILE_NAME=$DOCKER_FILE_NAME;
     fi
-  - echo DOCKER_FILE_NAME
+  - echo $DOCKER_FILE_NAME
+  - if [ "$DOCKER_NETWORK_NAME" == "" ];
+    then
+      export DOCKER_NETWORK_NAME="bridge";
+    else
+      export DOCKER_NETWORK_NAME=DOCKER_NETWORK_NAME;
+    fi
+  - echo $DOCKER_NETWORK_NAME
