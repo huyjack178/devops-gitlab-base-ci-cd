@@ -42,6 +42,6 @@ before_script:
     then
       export DOCKER_NETWORK_NAME="bridge";
     else
-      export DOCKER_NETWORK_NAME=DOCKER_NETWORK_NAME;
+      export DOCKER_NETWORK_NAME=$DOCKER_NETWORK_NAME;
     fi
   - echo $DOCKER_NETWORK_NAME
