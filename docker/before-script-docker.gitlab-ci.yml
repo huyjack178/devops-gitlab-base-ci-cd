@@ -30,3 +30,11 @@ before_script:
       export DOCKER_FILE_PATH=$DOCKER_FILE_PATH;
     fi
   - echo $DOCKER_FILE_PATH
+  - export CONFIG_FILE=$CONFIG_FILE_NAME.${DEPLOY_ENV}.$CONFIG_FILE_EXTENSION
+  - if [ "$DOCKER_FILE_NAME" == "" ];
+    then
+      export DOCKER_FILE_NAME="Dockerfile";
+    else
+      export DOCKER_FILE_NAME=DOCKER_FILE_NAME;
+    fi
+  - echo DOCKER_FILE_NAME
