@@ -6,11 +6,10 @@
     - docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL
     - docker pull $CI_REGISTRY_IMAGE:latest || true
     - docker build
-      --pull
+      --cache-from $CI_REGISTRY_IMAGE:latest
       -f $DOCKER_FILE_PATH/$DOCKER_FILE_NAME
       --tag $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION
-      --build-arg DEPLOY_ENV=$DEPLOY_ENV
-      --cache-from $CI_REGISTRY_IMAGE:latest .
+      --build-arg DEPLOY_ENV=$DEPLOY_ENV .
     - docker push $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION
     - docker tag $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:latest
