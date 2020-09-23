@@ -35,6 +35,6 @@ before_script:
     then
       export DOCKER_FILE_NAME="Dockerfile";
     else
-      export DOCKER_FILE_NAME=DOCKER_FILE_NAME;
+      export DOCKER_FILE_NAME=$DOCKER_FILE_NAME;
     fi
   - echo DOCKER_FILE_NAME
