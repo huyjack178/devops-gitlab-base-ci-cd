@@ -1,0 +1,20 @@
+.sync_configs_local:
+  stage: sync-configs
+  script:
+    - export SERVER_IPS=ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP
+      echo `for NODE in $(docker node ls --format '{{.ID}}'); do echo -e "$(docker node inspect --format '{{.Status.Addr}}' "${NODE}")"; done` | sed 's/ /, /g'
+    - for SERVER_IP in SERVER_IPS;
+      do 
+        ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "mkdir -p $WORKING_PATH";
+        scp $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$SERVER_IP:$WORKING_PATH;
+      done
+  tags:
+    - docker
+
+.sync_configs_kbt:
+  stage: sync-configs
+  script:
+    - ssh -p $KBT_PROXY_SSH_PORT -t $KBT_PROXY_USER@$KBT_PROXY_ADDRESS ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP mkdir -p $WORKING_PATH
+    - scp -P $SERVER_PORT -o ProxyCommand="ssh -p $KBT_PROXY_SSH_PORT -W %h:%p $KBT_PROXY_USER@$KBT_PROXY_ADDRESS" $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$SERVER_IP:$WORKING_PATH
+  tags:
+    - docker
