@@ -21,7 +21,7 @@
           echo "Updating service";
           docker service update
           --image	$CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION
-          $DOCKER_SERVICE_NAME-$DEPLOY_ENV
+          $DOCKER_SERVICE_NAME-$DEPLOY_ENV;
         else
           echo "Creating service";
           docker service create
@@ -31,7 +31,7 @@
           --network $DOCKER_NETWORK_NAME
           --mount type=bind,source=$WORKING_PATH/$CONFIG_FILE,target=$CONFIG_CONTAINER_PATH,ro=true \
           --endpoint-mode dnsrr
-          $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION
+          $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION;
         fi
   tags:
     - docker
