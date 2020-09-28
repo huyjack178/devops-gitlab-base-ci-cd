@@ -29,7 +29,7 @@
           --replicas $SWARM_REPLICAS
           --name $DOCKER_SERVICE_NAME-$DEPLOY_ENV
           --network $DOCKER_NETWORK_NAME
-          --mount type=bind,source=$WORKING_PATH/$CONFIG_FILE,target=$CONFIG_CONTAINER_PATH,ro=true \
+          --mount type=bind,source=$WORKING_PATH/$CONFIG_FILE,target=$CONFIG_CONTAINER_PATH,ro=true
           --endpoint-mode dnsrr
           $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION;
         fi
