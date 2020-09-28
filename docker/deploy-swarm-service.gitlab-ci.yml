@@ -3,7 +3,7 @@
   script:
     - echo "Sync config to swarm nodes"
     - >
-        for NODE in ${$SWARM_NODES//,/ };
+        for NODE in SWARM_NODES;
         do 
           ssh -o StrictHostKeyChecking=no $SERVER_USER@$NODE "mkdir -p $WORKING_PATH";
           scp $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH;
