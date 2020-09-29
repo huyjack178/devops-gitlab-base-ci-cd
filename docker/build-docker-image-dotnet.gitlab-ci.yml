@@ -16,7 +16,7 @@
       --cache-from $CI_REGISTRY_IMAGE:builder
       --cache-from $CI_REGISTRY_IMAGE:$DEPLOY_ENV-latest
       -f $DOCKER_FILE_PATH/$DOCKER_FILE_NAME
-      --tag $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION
+      --tag $CI_REGISTRY_IMAGE:$DEPLOY_ENV-$CI_REGISTRY_IMAGE_VERSION
       --build-arg CACHEBUST=$(date +%s)
       --build-arg DEPLOY_ENV=$DEPLOY_ENV .
     - docker push $CI_REGISTRY_IMAGE:$DEPLOY_ENV-$CI_REGISTRY_IMAGE_VERSION
