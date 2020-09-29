@@ -3,17 +3,17 @@
   script:
     - echo $DOCKER_FILE_PATH
     - docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL
-    - docker pull $CI_REGISTRY_IMAGE:builder-$DEPLOY_ENV || true
+    - docker pull $CI_REGISTRY_IMAGE:builder || true
     - docker build
       --target builder
-      --cache-from $CI_REGISTRY_IMAGE:builder-$DEPLOY_ENV
+      --cache-from $CI_REGISTRY_IMAGE:builder
       -f $DOCKER_FILE_PATH/$DOCKER_FILE_NAME
-      --tag $CI_REGISTRY_IMAGE:builder-$DEPLOY_ENV
+      --tag $CI_REGISTRY_IMAGE:builder
       --build-arg CACHEBUST=$(date +%s)
       --build-arg DEPLOY_ENV=$DEPLOY_ENV .
     - docker pull $CI_REGISTRY_IMAGE:$DEPLOY_ENV-latest || true
     - docker build
-      --cache-from $CI_REGISTRY_IMAGE:builder-$DEPLOY_ENV
+      --cache-from $CI_REGISTRY_IMAGE:builder
       --cache-from $CI_REGISTRY_IMAGE:$DEPLOY_ENV-latest
       -f $DOCKER_FILE_PATH/$DOCKER_FILE_NAME
       --tag $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION
@@ -22,6 +22,6 @@
     - docker push $CI_REGISTRY_IMAGE:$DEPLOY_ENV-$CI_REGISTRY_IMAGE_VERSION
     - docker tag $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $CI_REGISTRY_IMAGE:$DEPLOY_ENV-latest
     - docker push $CI_REGISTRY_IMAGE:$DEPLOY_ENV-latest
-    - docker push $CI_REGISTRY_IMAGE:builder-$DEPLOY_ENV
+    - docker push $CI_REGISTRY_IMAGE:builder
   tags:
     - docker
