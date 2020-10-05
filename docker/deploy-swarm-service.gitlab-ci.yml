@@ -1,58 +1,42 @@
-.base_deploy_swarm_service_local:
+variables:
+  PROXY_SSH_COMMAND: ssh -p $KBT_PROXY_SSH_PORT -t $KBT_PROXY_USER@$KBT_PROXY_ADDRESS
+
+.base_deploy_swarm_service:
   stage: deploy
   script:
     - echo "Sync config to swarm nodes"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP
+    - echo ${PROXY_SSH_COMMAND}
+    - ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$SERVER_IP
       docker network create -d overlay $DOCKER_NETWORK_NAME || true
     - >
-        for NODE in $SWARM_NODES;
-        do 
-          ssh -o StrictHostKeyChecking=no $SERVER_USER@$NODE "mkdir -p $WORKING_PATH";
+      for NODE in $SWARM_NODES;
+      do 
+        ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$NODE "mkdir -p $WORKING_PATH";
+        if [ $PROXY_SSH_COMMAND == "" ]; 
+        then
           scp $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH;
-          ssh -o StrictHostKeyChecking=no $SERVER_USER@$NODE docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL;
-          ssh -o StrictHostKeyChecking=no $SERVER_USER@$NODE docker pull $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION;
-        done
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP
+        else
+          scp -P $SERVER_PORT -o ProxyCommand="ssh -p $KBT_PROXY_SSH_PORT -W %h:%p $KBT_PROXY_USER@$KBT_PROXY_ADDRESS" $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$SERVER_IP:$WORKING_PATH;
+        fi
+        ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$NODE docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL;
+        ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$NODE docker pull $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION;
+      done
+    - ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$SERVER_IP
       "if docker service ls | grep $DOCKER_SERVICE_NAME-$DEPLOY_ENV;
       then
-        echo "Updating service";
-        docker service update --image	$CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $DOCKER_SERVICE_NAME-$DEPLOY_ENV;
+      echo "Updating service";
+      docker service update --image	$CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $DOCKER_SERVICE_NAME-$DEPLOY_ENV;
       else
-        echo "Creating service";
-        docker service create
-        --mode replicated
-        --replicas $SWARM_REPLICAS
-        --name $DOCKER_SERVICE_NAME-$DEPLOY_ENV
-        --network $DOCKER_NETWORK_NAME
-        --mount type=bind,source=$WORKING_PATH/$CONFIG_FILE,target=$CONFIG_CONTAINER_PATH,ro=true
-        --endpoint-mode dnsrr
-        --constraint node.labels.$NODE_LABEL==yes
-        $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION;
+      echo "Creating service";
+      docker service create
+      --mode replicated
+      --replicas $SWARM_REPLICAS
+      --name $DOCKER_SERVICE_NAME-$DEPLOY_ENV
+      --network $DOCKER_NETWORK_NAME
+      --mount type=bind,source=$WORKING_PATH/$CONFIG_FILE,target=$CONFIG_CONTAINER_PATH,ro=true
+      --endpoint-mode dnsrr
+      --constraint node.labels.$NODE_LABEL==yes
+      $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION;
       fi"
   tags:
     - docker
-
-.base_deploy_swarm_service_kbt:
-  extends:
-    - .base_deploy_local
-  script:
-    - ssh -p $KBT_PROXY_SSH_PORT -t $KBT_PROXY_USER@$KBT_PROXY_ADDRESS
-      ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP mkdir -p $WORKING_PATH
-    - scp -P $SERVER_PORT -o
-      ProxyCommand="ssh -p $KBT_PROXY_SSH_PORT -W %h:%p $KBT_PROXY_USER@$KBT_PROXY_ADDRESS" $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$SERVER_IP:$WORKING_PATH
-    - ssh -p $KBT_PROXY_SSH_PORT -t $KBT_PROXY_USER@$KBT_PROXY_ADDRESS
-      ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP
-      docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL
-    - ssh -p $KBT_PROXY_SSH_PORT -t $KBT_PROXY_USER@$KBT_PROXY_ADDRESS
-      ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP
-      docker pull $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION
-    - ssh -p $KBT_PROXY_SSH_PORT -t $KBT_PROXY_USER@$KBT_PROXY_ADDRESS
-      ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP
-      docker rm -f $DOCKER_SERVICE_NAME-$DEPLOY_ENV || true
-    - ssh -p $KBT_PROXY_SSH_PORT -t $KBT_PROXY_USER@$KBT_PROXY_ADDRESS
-      ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP
-      docker run --restart=always
-      --name $DOCKER_SERVICE_NAME-$DEPLOY_ENV
-      -p $DOCKER_PUBLIC_PORT:$DOCKER_PRIVATE_PORT
-      -v $WORKING_PATH/$CONFIG_FILE:$CONFIG_CONTAINER_PATH
-      -d $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION
