@@ -1,6 +1,3 @@
-variables:
-  PROXY_SSH_COMMAND: ssh -p $KBT_PROXY_SSH_PORT -t $KBT_PROXY_USER@$KBT_PROXY_ADDRESS
-
 .base_deploy_swarm_service:
   stage: deploy
   script:
@@ -12,7 +9,7 @@ variables:
       for NODE in $SWARM_NODES;
       do 
         ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$NODE "mkdir -p $WORKING_PATH";
-        if [ ${PROXY_SSH_COMMAND} == " " ]; 
+        if [ "$DEPLOY_ENV" == "LOCAL" ]; 
         then
           echo "Deploy LOCAL";
           scp $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH;
