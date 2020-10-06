@@ -12,7 +12,7 @@ variables:
       for NODE in $SWARM_NODES;
       do 
         ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$NODE "mkdir -p $WORKING_PATH";
-        if [ $PROXY_SSH_COMMAND == "" ]; 
+        if [ $PROXY_SSH_COMMAND == '' ]; 
         then
           scp $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH;
         else
