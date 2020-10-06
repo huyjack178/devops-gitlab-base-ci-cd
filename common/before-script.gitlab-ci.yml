@@ -4,3 +4,10 @@
   - mkdir -p ~/.ssh
   - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  - if [ "$CI_ENVIRONMENT_NAME" == "LOCAL" ];
+    then
+      export PROXY_SSH_COMMAND="";
+    else
+      export PROXY_SSH_COMMAND="ssh -p $KBT_PROXY_SSH_PORT -t $KBT_PROXY_USER@$KBT_PROXY_ADDRESS";
+    fi
+  - echo $PROXY_SSH_COMMAND
