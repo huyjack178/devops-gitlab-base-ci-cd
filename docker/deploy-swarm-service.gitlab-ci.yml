@@ -34,7 +34,7 @@
       then
         export CREATE_SERVICE_CMD="${CREATE_SERVICE_CMD} --mount type=bind,source=$WORKING_PATH/$CONFIG_FILE,target=$CONFIG_CONTAINER_PATH,ro=true"
       else
-        echo "Not mount config file"
+        echo "Not mount config file";
       fi
     - export CREATE_SERVICE_CMD="${CREATE_SERVICE_CMD} $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION"
     - echo $CREATE_SERVICE_CMD
