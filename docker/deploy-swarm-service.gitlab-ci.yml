@@ -18,7 +18,7 @@
           echo "Deploy KBT";
           scp -P $SERVER_PORT -o ProxyCommand="ssh -p $KBT_PROXY_SSH_PORT -W %h:%p $KBT_PROXY_USER@$KBT_PROXY_ADDRESS" $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$SERVER_IP:$WORKING_PATH;
         else
-          echo "Not copying config file"
+          echo "Not copying config file";
         fi
         ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$NODE docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL;
         ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$NODE docker pull $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION;
@@ -36,7 +36,7 @@
       else
         echo "Not mount config file"
       fi
-    - export CREATE_SERVICE_CMD="${CREATE_SERVICE_CMD} $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION;"
+    - export CREATE_SERVICE_CMD="${CREATE_SERVICE_CMD} $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION"
     - echo $CREATE_SERVICE_CMD
     - ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$SERVER_IP
       "if docker service ls | grep $DOCKER_SERVICE_NAME-$DEPLOY_ENV;
@@ -45,7 +45,7 @@
         docker service update --image	$CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $DOCKER_SERVICE_NAME-$DEPLOY_ENV;
       else
         echo "Creating service";
-        $CREATE_SERVICE_CMD
+        $CREATE_SERVICE_CMD;
       fi"
   tags:
     - docker
