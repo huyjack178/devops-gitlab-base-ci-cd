@@ -11,14 +11,13 @@
         ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$NODE "mkdir -p $WORKING_PATH";
         if [ "$DEPLOY_ENV" == "LOCAL" ] && [ -z ${CONFIG_FILE} ]; 
         then
-          echo "Deploy LOCAL";
           scp $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH;
         elif [ -z ${CONFIG_FILE} ]; 
         then
-          echo "Deploy KBT";
           scp -P $SERVER_PORT -o ProxyCommand="ssh -p $KBT_PROXY_SSH_PORT -W %h:%p $KBT_PROXY_USER@$KBT_PROXY_ADDRESS" $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$SERVER_IP:$WORKING_PATH;
         else
-          echo "Not copying config file";
+          echo "UPDATE DOCKER VERSION FOR IMAGE IN EACH ENVIRONMENT";
+          export CI_REGISTRY_IMAGE_VERSION="$DEPLOY_ENV-${CI_REGISTRY_IMAGE_VERSION}";
         fi
         ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$NODE docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL;
         ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$NODE docker pull $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION;
