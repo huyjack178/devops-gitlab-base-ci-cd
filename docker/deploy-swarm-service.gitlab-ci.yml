@@ -9,10 +9,10 @@
       for NODE in $SWARM_NODES;
       do 
         ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$NODE "mkdir -p $WORKING_PATH";
-        if [ "$DEPLOY_ENV" == "LOCAL" ] && [ -z ${CONFIG_FILE_NAME} ]; 
+        if [ "$DEPLOY_ENV" == "LOCAL" ] && [ ! -z "$CONFIG_FILE_NAME" ]; 
         then
           scp $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH;
-        elif [ -z ${CONFIG_FILE_NAME} ]; 
+        elif [ ! -z "$CONFIG_FILE_NAME" ]; 
         then
           scp -P $SERVER_PORT -o ProxyCommand="ssh -p $KBT_PROXY_SSH_PORT -W %h:%p $KBT_PROXY_USER@$KBT_PROXY_ADDRESS" $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$SERVER_IP:$WORKING_PATH;
         else
@@ -29,7 +29,7 @@
         --network $DOCKER_NETWORK_NAME
         --endpoint-mode dnsrr
         --constraint node.labels.$NODE_LABEL==yes"
-    - if [ -z ${CONFIG_FILE_NAME} ]; 
+    - if [ ! -z "$CONFIG_FILE_NAME" ]; 
       then
         export CREATE_SERVICE_CMD="${CREATE_SERVICE_CMD} --mount type=bind,source=$WORKING_PATH/$CONFIG_FILE,target=$CONFIG_CONTAINER_PATH,ro=true";
       else
