@@ -5,6 +5,7 @@
     - echo ${PROXY_SSH_COMMAND}
     - ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$SERVER_IP
       docker network create -d overlay $DOCKER_NETWORK_NAME || true
+    - echo $CONFIG_FILE_NAME
     - >
       for NODE in $SWARM_NODES;
       do 
