@@ -29,7 +29,7 @@
         --network $DOCKER_NETWORK_NAME
         --endpoint-mode dnsrr
         --constraint node.labels.$NODE_LABEL==yes"
-    - if [ -z ${CONFIG_FILE} ]; 
+    - if [ -z ${CONFIG_FILE_NAME} ]; 
       then
         export CREATE_SERVICE_CMD="${CREATE_SERVICE_CMD} --mount type=bind,source=$WORKING_PATH/$CONFIG_FILE,target=$CONFIG_CONTAINER_PATH,ro=true";
       else
