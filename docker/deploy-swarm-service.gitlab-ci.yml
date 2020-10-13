@@ -49,7 +49,6 @@
       "((docker service ls | grep $DOCKER_SERVICE_NAME-$DEPLOY_ENV) 
         && echo "Updating service"
         && docker service update --image $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $DOCKER_SERVICE_NAME-$DEPLOY_ENV)
-        || (echo "Creating service" && $CREATE_SERVICE_CMD)
-      fi"
+        || (echo "Creating service" && $CREATE_SERVICE_CMD)"
   tags:
     - docker
