@@ -3,25 +3,31 @@
   script:
     - echo "Sync config to swarm nodes"
     - echo ${PROXY_SSH_COMMAND}
-    - ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$SERVER_IP
+    - ${PROXY_SSH_COMMAND} ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP
       docker network create -d overlay $DOCKER_NETWORK_NAME || true
     - echo $CONFIG_FILE_NAME
     - >
       for NODE in $SWARM_NODES;
       do 
-        ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$NODE "mkdir -p $WORKING_PATH";
+        if [ $NODE == 10.2.189.65 ]; 
+        then
+          export NODE_PORT=$KBT_PROXY_SSH_PORT;
+        else
+          export NODE_PORT=22;
+        fi
+        ${PROXY_SSH_COMMAND} ssh -p $SERVER_PORT $SERVER_USER@$NODE "mkdir -p $WORKING_PATH";
         if [ "$DEPLOY_ENV" == "LOCAL" ] && [ ! -z "$CONFIG_FILE_NAME" ]; 
         then
           scp $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH;
         elif [ ! -z "$CONFIG_FILE_NAME" ]; 
         then
-          scp -P $SERVER_PORT -o ProxyCommand="ssh -p $KBT_PROXY_SSH_PORT -W %h:%p $KBT_PROXY_USER@$KBT_PROXY_ADDRESS" $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$SERVER_IP:$WORKING_PATH;
+          scp -P $NODE_PORT -o ProxyCommand="ssh -p $KBT_PROXY_SSH_PORT -W %h:%p $KBT_PROXY_USER@$KBT_PROXY_ADDRESS" $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$SERVER_IP:$WORKING_PATH;
         else
           echo "UPDATE DOCKER VERSION FOR IMAGE IN EACH ENVIRONMENT";
           export CI_REGISTRY_IMAGE_VERSION="$DEPLOY_ENV-${CI_COMMIT_SHA:0:8}";
         fi
-        ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$NODE docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL;
-        ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$NODE docker pull $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION;
+        ${PROXY_SSH_COMMAND} ssh -p $SERVER_PORT $SERVER_USER@$NODE docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL;
+        ${PROXY_SSH_COMMAND} ssh -p $SERVER_PORT $SERVER_USER@$NODE docker pull $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION;
       done
     - export CREATE_SERVICE_CMD="docker service create
         --mode replicated
@@ -38,11 +44,11 @@
       fi
     - export CREATE_SERVICE_CMD="${CREATE_SERVICE_CMD} $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION"
     - echo $CREATE_SERVICE_CMD
-    - ${PROXY_SSH_COMMAND} ssh $SERVER_USER@$SERVER_IP
+    - ${PROXY_SSH_COMMAND} ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP
       "if docker service ls | grep $DOCKER_SERVICE_NAME-$DEPLOY_ENV;
       then
         echo "Updating service";
-        docker service update --image	$CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $DOCKER_SERVICE_NAME-$DEPLOY_ENV;
+        docker service update --image $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $DOCKER_SERVICE_NAME-$DEPLOY_ENV;
       else
         echo "Creating service";
         $CREATE_SERVICE_CMD;
