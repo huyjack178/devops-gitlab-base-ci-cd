@@ -46,9 +46,9 @@
     - export CREATE_SERVICE_CMD="${CREATE_SERVICE_CMD} $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION"
     - echo $CREATE_SERVICE_CMD
     - ${PROXY_SSH_COMMAND} ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP
-      "((docker service ls | grep $DOCKER_SERVICE_NAME-$DEPLOY_ENV) 
+      "docker service ls | grep $DOCKER_SERVICE_NAME-$DEPLOY_ENV
         && echo "Updating service"
-        && docker service update --image $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $DOCKER_SERVICE_NAME-$DEPLOY_ENV)
-        || (echo "Creating service" && $CREATE_SERVICE_CMD)"
+        && docker service update --image $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $DOCKER_SERVICE_NAME-$DEPLOY_ENV
+        || echo "Creating service" && $CREATE_SERVICE_CMD"
   tags:
     - docker
