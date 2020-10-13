@@ -46,8 +46,7 @@
     - export CREATE_SERVICE_CMD="${CREATE_SERVICE_CMD} $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION"
     - echo $CREATE_SERVICE_CMD
     - ${PROXY_SSH_COMMAND} ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP
-      "if docker service ls | grep $DOCKER_SERVICE_NAME-$DEPLOY_ENV;
-      then
+      "if docker service ls | grep $DOCKER_SERVICE_NAME-$DEPLOY_ENV;then
         echo "Updating service";
         docker service update --image $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $DOCKER_SERVICE_NAME-$DEPLOY_ENV;
       else
