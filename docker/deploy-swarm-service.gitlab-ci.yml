@@ -19,10 +19,11 @@
         ${PROXY_SSH_COMMAND} ssh -p $NODE_PORT $SERVER_USER@$NODE "mkdir -p $WORKING_PATH";
         if [ "$DEPLOY_ENV" == "LOCAL" ] && [ ! -z "$CONFIG_FILE_NAME" ]; 
         then
-          echo "COPY CONFIG FILE ...";
+          echo "COPY CONFIG FILE LOCAL ...";
           scp $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH;
         elif [ ! -z "$CONFIG_FILE_NAME" ]; 
         then
+          echo "COPY CONFIG FILE KBT ...";
           scp -P $NODE_PORT -o ProxyCommand="ssh -p $KBT_PROXY_SSH_PORT -W %h:%p $KBT_PROXY_USER@$KBT_PROXY_ADDRESS" $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$SERVER_IP:$WORKING_PATH;
         else
           echo "UPDATE DOCKER VERSION FOR IMAGE IN EACH ENVIRONMENT ...";
