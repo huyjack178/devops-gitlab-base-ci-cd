@@ -3,7 +3,7 @@
   script:
     - echo "Sync config to swarm nodes"
     - echo ${PROXY_SSH_COMMAND}
-    - ${PROXY_SSH_COMMAND} ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP
+    - ${PROXY_SSH_COMMAND} ssh -o StrictHostKeyChecking=no -p $SERVER_PORT $SERVER_USER@$SERVER_IP
       docker network create -d overlay $DOCKER_NETWORK_NAME || true
     - echo $CONFIG_FILE_NAME
     - >
@@ -16,7 +16,7 @@
           export NODE_PORT=22;
         fi
         echo $NODE:$NODE_PORT;
-        ${PROXY_SSH_COMMAND} ssh -p $NODE_PORT $SERVER_USER@$NODE "mkdir -p $WORKING_PATH";
+        ${PROXY_SSH_COMMAND} ssh -o StrictHostKeyChecking=no -p $NODE_PORT $SERVER_USER@$NODE "mkdir -p $WORKING_PATH";
         if [ "$DEPLOY_ENV" == "LOCAL" ] && [ ! -z "$CONFIG_FILE_NAME" ]; 
         then
           echo "COPY CONFIG FILE LOCAL ...";
@@ -24,15 +24,15 @@
         elif [ ! -z "$CONFIG_FILE_NAME" ]; 
         then
           echo "COPY CONFIG FILE KBT ...";
-          echo "scp -P $NODE_PORT -o ProxyCommand=\"ssh -T -p $KBT_PROXY_SSH_PORT -W %h:%p $KBT_PROXY_USER@$KBT_PROXY_ADDRESS\" $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH;"
-          scp -P $NODE_PORT -o ProxyCommand="ssh -T -p $KBT_PROXY_SSH_PORT -W %h:%p $KBT_PROXY_USER@$KBT_PROXY_ADDRESS" $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH;
+          echo "scp -P $NODE_PORT -o ProxyCommand=\"ssh -o StrictHostKeyChecking=no -T -p $KBT_PROXY_SSH_PORT -W %h:%p $KBT_PROXY_USER@$KBT_PROXY_ADDRESS\" $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH;"
+          scp -P $NODE_PORT -o ProxyCommand="ssh -o StrictHostKeyChecking=no -T -p $KBT_PROXY_SSH_PORT -W %h:%p $KBT_PROXY_USER@$KBT_PROXY_ADDRESS" $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH;
         else
           echo "UPDATE DOCKER VERSION FOR IMAGE IN EACH ENVIRONMENT ...";
           export CI_REGISTRY_IMAGE_VERSION="$DEPLOY_ENV-${CI_COMMIT_SHA:0:8}";
         fi
         echo "PULLING IMAGE ... ";
-        ${PROXY_SSH_COMMAND} ssh -p $NODE_PORT $SERVER_USER@$NODE docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL;
-        ${PROXY_SSH_COMMAND} ssh -p $NODE_PORT $SERVER_USER@$NODE docker pull $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION;
+        ${PROXY_SSH_COMMAND} ssh -o StrictHostKeyChecking=no -p $NODE_PORT $SERVER_USER@$NODE docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL;
+        ${PROXY_SSH_COMMAND} ssh -o StrictHostKeyChecking=no -p $NODE_PORT $SERVER_USER@$NODE docker pull $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION;
       done
     - export CREATE_SERVICE_CMD="docker service create
         --mode replicated
@@ -49,7 +49,7 @@
       fi
     - export CREATE_SERVICE_CMD="${CREATE_SERVICE_CMD} $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION"
     - echo $CREATE_SERVICE_CMD
-    - ${PROXY_SSH_COMMAND} ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP
+    - ${PROXY_SSH_COMMAND} ssh -o StrictHostKeyChecking=no -p $SERVER_PORT $SERVER_USER@$SERVER_IP
       "docker service ls | grep $DOCKER_SERVICE_NAME-$DEPLOY_ENV
         && echo "Updating service"
         && docker service update --image $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $DOCKER_SERVICE_NAME-$DEPLOY_ENV
