@@ -36,14 +36,13 @@
       --target builder
       --cache-from $CI_REGISTRY_IMAGE:builder
       -f $DOCKER_FILE_PATH/$DOCKER_FILE_NAME
-      --tag $CI_REGISTRY_IMAGE:builder
-      --build-arg DEPLOY_ENV=$DEPLOY_ENV .
+      --tag $CI_REGISTRY_IMAGE:builder .
     - docker pull $CI_REGISTRY_IMAGE:latest || true
     - docker build
       --cache-from $CI_REGISTRY_IMAGE:builder
       --cache-from $CI_REGISTRY_IMAGE:latest
       -f $DOCKER_FILE_PATH/$DOCKER_FILE_NAME
-      --tag $CI_REGISTRY_IMAGE:$DEPLOY_ENV-$CI_REGISTRY_IMAGE_VERSION .
+      --tag $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION .
     - docker push $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION
     - docker tag $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:latest
