@@ -7,7 +7,7 @@ sonarqube-dotnet-check:
     image:
         name: git3.nexdev.net:5050/lumi-ops/docker-images/java-dotnet
     before_script:
-        - dotnet tool install --global dotnet-sonarscanner
+        - dotnet tool install --global dotnet-sonarscanner --version 4.10.0
         - export PATH="$PATH:/root/.dotnet/tools"
         - echo "===========Start Sonar Scanner============="
     script:
