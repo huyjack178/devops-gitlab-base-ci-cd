@@ -18,6 +18,7 @@ before_script:
   - mkdir -p ~/.ssh
   - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  - export DOCKER_HOST=tcp://localhost:2378
   - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
   - export CI_REGISTRY_IMAGE=$DOCKER_REG_URL/$DOCKER_IMAGE_PATH
   - export CI_REGISTRY_IMAGE_VERSION=${CI_COMMIT_SHA:0:8}
