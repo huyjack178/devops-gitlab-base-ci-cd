@@ -13,14 +13,12 @@ dotnet-unittest:
       do 
         if echo $path | grep 'bin'; 
         then 
-          coverlet $path --target "dotnet" --targetargs "test --no-build" --format cobertura; 
+          coverlet $path --target "dotnet" --targetargs "test --no-build" --format opencover; 
         fi
       done
   artifacts:
     when: always
     paths: 
       - ./**/*.trx
-      - ./**/*coverage.cobertura.xml
-    reports:
-      cobertura: ./**/coverage.cobertura.xml
+      - ./**/*opencover.cobertura.xml
 
