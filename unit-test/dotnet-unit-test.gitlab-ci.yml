@@ -20,5 +20,5 @@ dotnet-unittest:
     when: always
     paths: 
       - ./**/*.trx
-      - ./**/*opencover.cobertura.xml
+      - ./**/*coverage.opencover.xml
 
