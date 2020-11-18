@@ -1,0 +1,22 @@
+dotnet-test:
+  stage: test
+  image: git3.nexdev.net:5050/lumi-ops/docker-images/dotnet/core/sdk:3.1
+  tags:
+    - docker
+  before_script:
+    - dotnet tool install --global coverlet.console
+  script:
+    - dotnet build
+    - dotnet test --test-adapter-path:. --logger:"trx;MethodFormat=Class;FailureBodyFormat=Verbose"
+    - for path in $(find ./ -name '*Tests.dll'); 
+      do 
+        if echo $path | grep 'bin'; 
+        then 
+          coverlet $path --target "dotnet" --targetargs "test --no-build" --format opencover; 
+        fi
+      done
+  artifacts:
+    when: always
+    paths: 
+      - ./**/*.trx
+      - ./**/*coverage.opencover.xml
