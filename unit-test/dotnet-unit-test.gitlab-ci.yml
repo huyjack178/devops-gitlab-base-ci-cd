@@ -17,6 +17,7 @@ dotnet-unittest:
         fi
       done
   artifacts:
+    name: "unittest"
     when: always
     paths: 
       - ./**/*.trx
