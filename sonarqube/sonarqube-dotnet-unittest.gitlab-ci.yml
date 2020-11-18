@@ -19,8 +19,8 @@ sonarqube-dotnet-check:
            /v:"${CI_COMMIT_REF_NAME} ($CI_COMMIT_SHORT_SHA) [${CI_JOB_ID}]" 
            /d:sonar.login=$SONAR_TOKEN 
            /d:sonar.host.url=$SONAR_HOST_URL
-           /d:sonar.cs.opencover.reportsPaths=./*coverage.opencover.xml
-           /d:sonar.cs.vstest.reportsPaths=./*.trx	
+           /d:sonar.cs.opencover.reportsPaths=coverage.opencover.xml
+           /d:sonar.cs.vstest.reportsPaths=**/*.trx	
         - dotnet build $SOLUTION_NAME
         - dotnet sonarscanner end /d:sonar.login=$SONAR_TOKEN
     allow_failure: true
