@@ -1,5 +1,5 @@
 dotnet-unittest:
-  stage: unit-test
+  stage: pre-test
   image: git3.nexdev.net:5050/lumi-ops/docker-images/dotnet/core/sdk:3.1
   tags:
     - docker
@@ -17,7 +17,6 @@ dotnet-unittest:
         fi
       done
   artifacts:
-    name: "unittest"
     when: always
     paths: 
       - ./**/*.trx
