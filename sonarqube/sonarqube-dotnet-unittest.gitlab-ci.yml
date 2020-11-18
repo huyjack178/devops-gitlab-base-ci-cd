@@ -4,7 +4,8 @@ variables:
 
 sonarqube-dotnet-check:
     stage: test
-    dependencies: dotnet-unittest
+    dependencies: 
+        - dotnet-unittest
     image:
         name: git3.nexdev.net:5050/lumi-ops/docker-images/java-dotnet
     before_script:
