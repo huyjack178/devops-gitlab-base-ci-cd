@@ -8,7 +8,7 @@ unit-test-dotnet:
     - export PATH="$PATH:/root/.dotnet/tools"
   script:
     - dotnet build
-    - dotnet test --test-adapter-path:. --logger:"trx;MethodFormat=Class;FailureBodyFormat=Verbose"
+    - dotnet test --test-adapter-path:. --logger:"trx"
     - for path in $(find ./ -name '*Tests.dll'); 
       do 
         if echo $path | grep 'bin'; 
