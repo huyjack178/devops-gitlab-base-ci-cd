@@ -1,0 +1,27 @@
+include:
+  - project: "ci/common-ci"
+    ref: master
+    file: "common/deploy.gitlab-ci.yml"
+  - project: "ci/common-ci"
+    ref: master
+    file: "docker/deploy-swarm-service.gitlab-ci.yml"
+
+.deploy:local:swarm:
+  extends:
+    - .deploy:local
+    - .base_deploy_swarm_service
+
+.deploy:sit:swarm:
+  extends:
+    - .deploy:sit
+    - .base_deploy_swarm_service
+
+.deploy:uat:swarm:
+  extends:
+    - .deploy:uat
+    - .base_deploy_swarm_service
+
+.deploy:prod:swarm:
+  extends:
+    - .deploy:prod
+    - .base_deploy_swarm_service
