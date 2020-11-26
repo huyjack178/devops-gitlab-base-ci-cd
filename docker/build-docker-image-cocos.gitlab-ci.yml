@@ -1,4 +1,4 @@
-.build_image:
+.build:cocos:image:
   stage: build
   script:
     - echo $DOCKER_FILE_PATH

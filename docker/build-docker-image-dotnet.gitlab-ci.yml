@@ -1,4 +1,4 @@
-.build_image:
+.build:dotnet:image:
   stage: build
   script:
     - echo $DOCKER_FILE_PATH
@@ -26,7 +26,7 @@
   tags:
     - docker
 
-.build_image_no_env:
+.build:dotnet:image:noenv:
   stage: build
   script:
     - echo $DOCKER_FILE_PATH

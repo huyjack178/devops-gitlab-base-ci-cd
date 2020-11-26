@@ -2,7 +2,7 @@ include:
   - project: "ci/common-ci"
     ref: master
     file: "common/env.gitlab-ci.yml"
-    
+
 .deploy:local:
   extends:
     - .deploy:local:rules
@@ -21,4 +21,9 @@ include:
 .deploy:prod:
   extends:
     - .deploy:prod:rules
+    - .env:prod
+
+.deploy:prod:auto:
+  extends:
+    - .deploy:prod-auto:rules
     - .env:prod

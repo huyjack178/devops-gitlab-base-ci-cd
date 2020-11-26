@@ -1,10 +1,14 @@
 include:
+  - project: 'ci/common-ci'
+    ref: master
+    file: 'docker/before-script-docker.gitlab-ci.yml'
   - project: "ci/common-ci"
     ref: master
     file: "common/deploy.gitlab-ci.yml"
   - project: "ci/common-ci"
     ref: master
     file: "docker/deploy-swarm-service.gitlab-ci.yml"
+
 
 .deploy:local:swarm:
   extends:
