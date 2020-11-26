@@ -8,6 +8,11 @@ include:
     - .deploy:local:rules
     - .env:local
 
+.deploy:local1:
+  extends:
+    - .deploy:local1:rules
+    - .env:local1
+
 .deploy:sit:
   extends:
     - .deploy:sit:rules
