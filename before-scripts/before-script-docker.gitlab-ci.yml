@@ -1,10 +1,5 @@
 image: git3.nexdev.net:5050/lumi-ops/docker-images/docker:19.03.12
 
-include:
-  - project: "ci/common-ci"
-    ref: master
-    file: "common/env.gitlab-ci.yml"
-
 before_script:
   #  - docker info
   - echo $CURRENT_TAG
