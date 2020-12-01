@@ -47,7 +47,7 @@ before_script:
     export DOCKER_NETWORK_NAME=$DOCKER_NETWORK_NAME;
     fi
   - echo $DOCKER_NETWORK_NAME
-  - if [ "$DEPLOY_ENV" == "LOCAL" ];
+  - if [ "$DEPLOY_ENV" == "LOCAL" ] || [ "$DEPLOY_ENV" == "LOCAL-1" ];
     then
     export PROXY_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -p $SC_SWARM_LEADER_LOCAL_SSH_PORT -W %h:%p -q $SC_SWARM_LEADER_LOCAL_SSH_USER@$SC_SWARM_LEADER_LOCAL";
     else
