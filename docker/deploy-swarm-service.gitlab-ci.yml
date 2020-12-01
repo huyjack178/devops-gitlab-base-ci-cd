@@ -17,9 +17,13 @@
         fi
         echo $NODE:$NODE_PORT;
         ssh -o ProxyCommand="${PROXY_SSH_COMMAND}" -o StrictHostKeyChecking=no -p $NODE_PORT $SERVER_USER@$NODE "mkdir -p $WORKING_PATH";
-        if [[ "$DEPLOY_ENV" == "LOCAL" ] || [ "$DEPLOY_ENV" == "LOCAL-1" ]] && [ ! -z "$CONFIG_FILE_NAME" ]; 
+        if [ "$DEPLOY_ENV" == "LOCAL" ] && [ ! -z "$CONFIG_FILE_NAME" ]; 
         then
           echo "COPY CONFIG FILE LOCAL ...";
+          scp $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH;
+        elif [ "$DEPLOY_ENV" == "LOCAL-1" ] && [ ! -z "$CONFIG_FILE_NAME" ]; 
+        then
+          echo "COPY CONFIG FILE LOCAL-1 ...";
           scp $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH;
         elif [ ! -z "$CONFIG_FILE_NAME" ]; 
         then
