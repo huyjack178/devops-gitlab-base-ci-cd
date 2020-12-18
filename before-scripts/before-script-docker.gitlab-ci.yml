@@ -60,3 +60,9 @@ before_script:
     else
     export WORKING_PATH=/var/www$PROJECT_WORKING_PATH;
     fi
+  - if [ "$SERVICE_NAME" == "" ];
+    then
+    echo "$DOCKER_SERVICE_NAME"
+    else
+    export DOCKER_SERVICE_NAME=$SERVICE_NAME
+    fi
