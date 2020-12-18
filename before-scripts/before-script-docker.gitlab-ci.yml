@@ -56,13 +56,13 @@ before_script:
   - echo $PROXY_SSH_COMMAND
   - if [ "$SERVICE_WORKING_PATH" == "" ];
     then
-    echo "$WORKING_PATH"
+    echo "$WORKING_PATH";
     else
     export WORKING_PATH=/var/www$SERVICE_WORKING_PATH;
     fi
   - if [ "$SERVICE_NAME" == "" ];
     then
-    echo "$DOCKER_SERVICE_NAME"
+    echo "$DOCKER_SERVICE_NAME";
     else
-    export DOCKER_SERVICE_NAME=$SERVICE_NAME
+    export DOCKER_SERVICE_NAME=$SERVICE_NAME;
     fi
