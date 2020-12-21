@@ -12,6 +12,12 @@ sonarqube-check:
     name: sonarsource/sonar-scanner-cli:latest
   before_script:
     - echo "===========Start Sonar Scanner============="
+    - if [ "$PROJECT_NAME" == "" ];
+      then
+      export PROJECT_NAME=$SERVICE_NAME
+      else
+      echo "$PROJECT_NAME"
+      fi
   script:
-    - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=$SERVICE_NAME -Dsonar.projectVersion="${CI_COMMIT_REF_NAME} ($CI_COMMIT_SHORT_SHA) [${CI_JOB_ID}]" -Dproject.settings=./sonarqube.analysis.properties -Dsonar.sources=.
+    - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=$PROJECT_NAME -Dsonar.projectVersion="${CI_COMMIT_REF_NAME} ($CI_COMMIT_SHORT_SHA) [${CI_JOB_ID}]" -Dproject.settings=./sonarqube.analysis.properties -Dsonar.sources=.
   allow_failure: true
