@@ -9,7 +9,7 @@ cache:
 sonarqube-check:
   stage: test
   image:
-    name: sonarsource/sonar-scanner-cli:4.4
+    name: sonarsource/sonar-scanner-cli:latest
   before_script:
     - echo "===========Start Sonar Scanner============="
     - if [ "$PROJECT_NAME" == "" ];
