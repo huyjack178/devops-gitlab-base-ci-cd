@@ -1,0 +1,74 @@
+image: registry.nexdev.net:5050/docker/docker-engine/docker:19.03.14
+
+before_script:
+  #  - docker info
+  - echo $CURRENT_TAG
+  - if echo "$CI_COMMIT_TAG" | grep -q "$CURRENT_TAG";
+    then
+    export DEPLOY_ENV=$CI_ENVIRONMENT_NAME;
+    echo "Continue deploying";
+    elif [ "$CI_COMMIT_BRANCH" == "master" ];
+    then
+    export DEPLOY_ENV=PROD;
+    echo "Continue deploying";
+    else
+    echo "This job has tag is not used for current repository";
+    exit 1;
+    fi
+  - eval $(ssh-agent -s)
+  - mkdir -p ~/.ssh
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  - echo -e "${SSH_PRIVATE_KEY_1}\n${SSH_PRIVATE_KEY_2}\n${SSH_PRIVATE_KEY_3}" | ssh-add -
+  - export COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+  - export CI_REGISTRY_IMAGE=$DOCKER_REG_URL/$DOCKER_IMAGE_PATH
+  - export CI_REGISTRY_IMAGE_VERSION=${CI_COMMIT_SHA:0:8}
+  - echo $CI_REGISTRY_IMAGE
+  - if [ "$CONFIG_FILE_EXTENSION" == "" ]; then
+    export CONFIG_FILE=$CONFIG_FILE_NAME.${DEPLOY_ENV};
+    export CONFIG_DEST_FILE=$CONFIG_FILE_NAME;
+    else
+    export CONFIG_FILE=$CONFIG_FILE_NAME.${DEPLOY_ENV}.$CONFIG_FILE_EXTENSION;
+    export CONFIG_DEST_FILE=$CONFIG_FILE_NAME.$CONFIG_FILE_EXTENSION;
+    fi
+  - if [ "$DOCKER_FILE_PATH" == "" ]; then
+    export DOCKER_FILE_PATH=".";
+    else
+    export DOCKER_FILE_PATH=$DOCKER_FILE_PATH;
+    fi
+  - echo $DOCKER_FILE_PATH
+  - if [ "$DOCKER_FILE_NAME" == "" ]; then
+    export DOCKER_FILE_NAME="Dockerfile";
+    else
+    export DOCKER_FILE_NAME=$DOCKER_FILE_NAME;
+    fi
+  - echo $DOCKER_FILE_NAME
+  - if [ "$DOCKER_NETWORK_NAME" == "" ]; then
+    export DOCKER_NETWORK_NAME="bridge";
+    else
+    export DOCKER_NETWORK_NAME=$DOCKER_NETWORK_NAME;
+    fi
+  - echo $DOCKER_NETWORK_NAME
+  - if echo "$DEPLOY_ENV" | grep -q "LOCAL"; then
+    export PROXY_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -p $LOCAL_PROXY_SSH_PORT -W %h:%p -q $LOCAL_PROXY_USER@$LOCAL_PROXY_SERVER";
+    elif echo "$DEPLOY_ENV" | grep -q "SIT"; then
+    export PROXY_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -p $SIT_PROXY_SSH_PORT -W %h:%p -q $SIT_PROXY_USER@$SIT_PROXY_SERVER";
+    else
+    export PROXY_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -p $KBT_PROXY_SSH_PORT -W %h:%p -q $KBT_PROXY_USER@$KBT_PROXY_SERVER";
+    fi
+  - echo $PROXY_SSH_COMMAND
+  - if [ "$SERVICE_NAME" == "" ]; then
+    echo "$DOCKER_SERVICE_NAME";
+    else
+    export DOCKER_SERVICE_NAME=$SERVICE_NAME;
+    fi
+  - if [ "$PROJECT_ROOT_PATH" == "" ]; then
+    echo "Root is here";
+    else
+    cd $PROJECT_ROOT_PATH;
+    fi
+  - if [ "$DOCKER_COMPOSE_FILE_NAME" == "" ]; then
+    export DOCKER_COMPOSE_FILE_NAME="docker-compose";
+    else
+    echo "$DOCKER_COMPOSE_FILE_NAME";
+    fi

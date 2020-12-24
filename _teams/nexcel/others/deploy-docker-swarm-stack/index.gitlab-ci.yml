@@ -1,0 +1,19 @@
+include:
+  - project: 'ci/common-ci'
+    ref: rocketor
+    file: 'docker/deploy-stack-swarm.gitlab-ci.yml'
+  - project: 'ci/common-ci'
+    ref: rocketor
+    file: '_teams/nexcel/others/variables.gitlab-ci.yml'
+  - project: 'ci/common-ci'
+    ref: rocketor
+    file: '_teams/nexcel/others/deploy-docker-swarm-stack/local.gitlab-ci.yml'
+  - project: 'ci/common-ci'
+    ref: rocketor
+    file: '_teams/nexcel/others/deploy-docker-swarm-stack/sit.gitlab-ci.yml'
+  - project: 'ci/common-ci'
+    ref: rocketor
+    file: '_teams/nexcel/others/deploy-docker-swarm-stack/uat.gitlab-ci.yml'
+  - project: 'ci/common-ci'
+    ref: rocketor
+    file: '_teams/nexcel/others/deploy-docker-swarm-stack/prod.gitlab-ci.yml'

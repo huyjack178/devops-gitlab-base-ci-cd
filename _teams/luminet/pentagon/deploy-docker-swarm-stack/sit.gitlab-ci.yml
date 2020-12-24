@@ -1,0 +1,35 @@
+.deploy:sit:base:swarm:stack:
+  extends:
+    - .deploy:sit:swarm:stack
+  variables:
+    SERVER_IP: $SC_SWARM_LEADER_SIT
+    SERVER_USER: $SC_SWARM_LEADER_SIT_SSH_USER
+    SERVER_PORT: $SC_SWARM_LEADER_SIT_SSH_PORT
+    SWARM_NODES: $SC_SWARM_CLUSTER_SIT
+
+.deploy:sit1:base:swarm:stack:
+  extends:
+    - .deploy:sit1:swarm:stack
+  variables:
+    SERVER_IP: $SC_SWARM_LEADER_SIT
+    SERVER_USER: $SC_SWARM_LEADER_SIT_SSH_USER
+    SERVER_PORT: $SC_SWARM_LEADER_SIT_SSH_PORT
+    SWARM_NODES: $SC_SWARM_CLUSTER_SIT
+
+.deploy:sit2:base:swarm:stack:
+  extends:
+    - .deploy:sit2:swarm:stack
+  variables:
+    SERVER_IP: $SC_SWARM_LEADER_SIT
+    SERVER_USER: $SC_SWARM_LEADER_SIT_SSH_USER
+    SERVER_PORT: $SC_SWARM_LEADER_SIT_SSH_PORT
+    SWARM_NODES: $SC_SWARM_CLUSTER_SIT
+
+.deploy:sit3:base:swarm:stack:
+  extends:
+    - .deploy:sit3:swarm:stack
+  variables:
+    SERVER_IP: $SC_SWARM_LEADER_SIT
+    SERVER_USER: $SC_SWARM_LEADER_SIT_SSH_USER
+    SERVER_PORT: $SC_SWARM_LEADER_SIT_SSH_PORT
+    SWARM_NODES: $SC_SWARM_CLUSTER_SIT

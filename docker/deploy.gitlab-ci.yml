@@ -1,0 +1,89 @@
+include:
+  - project: 'ci/common-ci'
+    ref: rocketor
+    file: 'common/env.gitlab-ci.yml'
+
+.deploy:local:
+  extends:
+    - .deploy:local:rules
+    - .env:local
+
+.deploy:local1:
+  extends:
+    - .deploy:local1:rules
+    - .env:local1
+
+.deploy:local2:
+  extends:
+    - .deploy:local2:rules
+    - .env:local2
+
+.deploy:local3:
+  extends:
+    - .deploy:local3:rules
+    - .env:local3
+
+.deploy:sit:
+  extends:
+    - .deploy:sit:rules
+    - .env:sit
+
+.deploy:sit1:
+  extends:
+    - .deploy:sit1:rules
+    - .env:sit1
+
+.deploy:sit2:
+  extends:
+    - .deploy:sit2:rules
+    - .env:sit2
+
+.deploy:sit3:
+  extends:
+    - .deploy:sit3:rules
+    - .env:sit3
+
+.deploy:uat:
+  extends:
+    - .deploy:uat:rules
+    - .env:uat
+
+.deploy:uat1:
+  extends:
+    - .deploy:uat1:rules
+    - .env:uat1
+
+.deploy:uat2:
+  extends:
+    - .deploy:uat2:rules
+    - .env:uat2
+
+.deploy:uat3:
+  extends:
+    - .deploy:uat3:rules
+    - .env:uat3
+
+.deploy:prod:
+  extends:
+    - .deploy:prod:rules
+    - .env:prod
+
+.deploy:prod1:
+  extends:
+    - .deploy:prod1:rules
+    - .env:prod1
+
+.deploy:prod2:
+  extends:
+    - .deploy:prod2:rules
+    - .env:prod2
+
+.deploy:prod3:
+  extends:
+    - .deploy:prod3:rules
+    - .env:prod3
+
+.deploy:prod:auto:
+  extends:
+    - .deploy:prod-auto:rules
+    - .env:prod

@@ -1,0 +1,51 @@
+.base_deploy_swarm_service:
+  stage: deploy
+  script:
+    - echo "Sync config to swarm nodes $SERVER_PORT $SERVER_USER@$SERVER_IP"
+    - ssh -o ProxyCommand="${PROXY_SSH_COMMAND}" -o StrictHostKeyChecking=no -p $SERVER_PORT $SERVER_USER@$SERVER_IP
+      docker network create -d overlay $DOCKER_NETWORK_NAME || true
+    - >
+      for NODE in $SWARM_NODES;
+      do 
+        if [ $NODE == 10.2.189.65 ]; 
+        then
+          export NODE_PORT=$KBT_PROXY_SSH_PORT;
+        else
+          export NODE_PORT=22;
+        fi
+        echo $NODE:$NODE_PORT;
+        ssh -o ProxyCommand="${PROXY_SSH_COMMAND}" -o StrictHostKeyChecking=no -p $NODE_PORT $SERVER_USER@$NODE "mkdir -p $WORKING_PATH";
+        if [ ! -z "$CONFIG_FILE_NAME" ]; 
+        then
+          echo "scp -P $NODE_PORT -o ProxyCommand="${PROXY_SSH_COMMAND}" $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH;"
+          scp -P $NODE_PORT -o ProxyCommand="${PROXY_SSH_COMMAND}" $CONFIGS_SRC_DIR_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH;
+        else
+          echo "UPDATE DOCKER VERSION FOR IMAGE IN EACH ENVIRONMENT ...";
+          export CI_REGISTRY_IMAGE_VERSION="$DEPLOY_ENV-${CI_COMMIT_SHA:0:8}";
+        fi
+        echo "PULLING IMAGE ... ";
+        ssh -o ProxyCommand="${PROXY_SSH_COMMAND}" -o StrictHostKeyChecking=no -p $NODE_PORT $SERVER_USER@$NODE  docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL;
+        ssh -o ProxyCommand="${PROXY_SSH_COMMAND}" -o StrictHostKeyChecking=no -p $NODE_PORT $SERVER_USER@$NODE  docker pull $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION;
+      done
+    - export CREATE_SERVICE_CMD="docker service create
+      --mode replicated
+      --replicas $SWARM_REPLICAS
+      --name ${DOCKER_SERVICE_NAME}_${DEPLOY_ENV}
+      --network $DOCKER_NETWORK_NAME
+      --endpoint-mode dnsrr
+      --constraint node.labels.$NODE_LABEL==yes"
+    - if [ ! -z "$CONFIG_FILE_NAME" ];
+      then
+      export CREATE_SERVICE_CMD="${CREATE_SERVICE_CMD} --mount type=bind,source=$WORKING_PATH/$CONFIG_FILE,target=$CONFIG_CONTAINER_PATH,ro=true";
+      else
+      echo "Not mount config file";
+      fi
+    - export CREATE_SERVICE_CMD="${CREATE_SERVICE_CMD} $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION"
+    - echo $CREATE_SERVICE_CMD
+    - ssh -o ProxyCommand="${PROXY_SSH_COMMAND}" -o StrictHostKeyChecking=no -p $SERVER_PORT $SERVER_USER@$SERVER_IP
+      " docker service ls | grep ${DOCKER_SERVICE_NAME}_${DEPLOY_ENV}
+      && echo "Updating service"
+      &&  docker service update --image $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION ${DOCKER_SERVICE_NAME}_${DEPLOY_ENV}
+      || (echo "Creating service" && $CREATE_SERVICE_CMD)"
+  tags:
+    - docker

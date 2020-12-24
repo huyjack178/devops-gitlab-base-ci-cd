@@ -1,0 +1,45 @@
+include:
+  - project: 'ci/common-ci'
+    ref: rocketor
+    file: 'docker/base/before-script-docker.gitlab-ci.yml'
+  - project: 'ci/common-ci'
+    ref: rocketor
+    file: 'docker/deploy.gitlab-ci.yml'
+  - project: 'ci/common-ci'
+    ref: rocketor
+    file: 'docker/base/deploy-swarm-service.gitlab-ci.yml'
+
+.deploy:local:swarm:
+  extends:
+    - .deploy:local
+    - .base_deploy_swarm_service
+
+.deploy:local1:swarm:
+  extends:
+    - .deploy:local1
+    - .base_deploy_swarm_service
+
+.deploy:local2:swarm:
+  extends:
+    - .deploy:local2
+    - .base_deploy_swarm_service
+
+.deploy:local3:swarm:
+  extends:
+    - .deploy:local3
+    - .base_deploy_swarm_service
+
+.deploy:sit:swarm:
+  extends:
+    - .deploy:sit
+    - .base_deploy_swarm_service
+
+.deploy:uat:swarm:
+  extends:
+    - .deploy:uat
+    - .base_deploy_swarm_service
+
+.deploy:prod:swarm:
+  extends:
+    - .deploy:prod
+    - .base_deploy_swarm_service

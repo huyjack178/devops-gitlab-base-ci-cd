@@ -1,0 +1,60 @@
+.base_deploy_stack_swarm:
+  stage: deploy
+  script:
+    - ssh -o ProxyCommand="${PROXY_SSH_COMMAND}" -o StrictHostKeyChecking=no -p $SERVER_PORT $SERVER_USER@$SERVER_IP  docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL;
+    - ssh -o ProxyCommand="${PROXY_SSH_COMMAND}" -o StrictHostKeyChecking=no -p $SERVER_PORT $SERVER_USER@$SERVER_IP "mkdir -p $WORKING_PATH/$DEPLOY_ENV/configs";
+    - echo "===========Transform docker-compose.yml=============";
+    - export DOCKER_COMPOSE_FILE=${DEPLOY_ENV}.$DOCKER_COMPOSE_FILE_NAME.yml;
+    - echo $DOCKER_COMPOSE_FILE
+    - echo $SWARM_NODES
+    - git clone $DOCKER_COMPOSE_REPO_URL compose_repo
+    - cp compose_repo/$DOCKER_COMPOSE_REPO_PATH/$DOCKER_COMPOSE_FILE $DOCKER_COMPOSE_FILE_PATH
+    - echo "===========Sync docker-compose.yml============="
+    - scp -P $SERVER_PORT -o ProxyCommand="${PROXY_SSH_COMMAND}" $DOCKER_COMPOSE_FILE_PATH/$DOCKER_COMPOSE_FILE $SERVER_USER@$SERVER_IP:$WORKING_PATH/$DEPLOY_ENV/docker-compose.yml;
+    - echo "===========Sync configs============="
+    - if [ ! -z "$CONFIG_FILE_NAME" ];
+      then
+        scp -P $SERVER_PORT -o ProxyCommand="${PROXY_SSH_COMMAND}" $CONFIG_FILE_PATH/$CONFIG_FILE $SERVER_USER@$SERVER_IP:$WORKING_PATH/$DEPLOY_ENV/configs/$CONFIG_DEST_FILE;
+      fi
+    - if [ ! -z "$SP_FILE_NAME" ];
+      then
+        export SP_ENV=$(echo ${DEPLOY_ENV}| cut -d'_' -f 1);
+        export SP_FILE=$SP_FILE_NAME.${SP_ENV}.$SP_FILE_EXTENSION;
+        scp -P $SERVER_PORT -o ProxyCommand="${PROXY_SSH_COMMAND}" $SP_FILE_PATH/$SP_FILE $SERVER_USER@$SERVER_IP:$WORKING_PATH/$DEPLOY_ENV/configs/$SP_FILE_NAME.$SP_FILE_EXTENSION;
+      fi
+    - >
+      ssh -o ProxyCommand="${PROXY_SSH_COMMAND}" -o StrictHostKeyChecking=no -p $SERVER_PORT $SERVER_USER@$SERVER_IP
+      "cd $WORKING_PATH/$DEPLOY_ENV 
+      && docker service rm ${SERVICE_NAME}_${DEPLOY_ENV} || true 
+      && docker config rm ${SERVICE_NAME}_${DEPLOY_ENV}_config || true 
+      && docker config rm ${SERVICE_NAME}_${DEPLOY_ENV}_sp_config || true 
+      && docker stack deploy --compose-file=docker-compose.yml --with-registry-auth $STACK_NAME";
+  tags:
+    - docker
+
+    # - >
+    #   for NODE in $SWARM_NODES;
+    #   do 
+    #     if [ $NODE == 10.2.189.65 ]; 
+    #     then
+    #       export NODE_PORT=$KBT_PROXY_SSH_PORT;
+    #     else
+    #       export NODE_PORT=22;
+    #     fi
+    #     echo $NODE:$NODE_PORT;
+    #     ssh -o ProxyCommand="${PROXY_SSH_COMMAND}" -o StrictHostKeyChecking=no -p $NODE_PORT $SERVER_USER@$NODE "mkdir -p $WORKING_PATH/$DEPLOY_ENV/configs";
+    #     if [ ! -z "$CONFIG_FILE_NAME" ];
+    #     then
+    #       echo "Copy configs file";
+    #       scp -P $NODE_PORT -o ProxyCommand="${PROXY_SSH_COMMAND}" $CONFIG_FILE_PATH/$CONFIG_FILE $SERVER_USER@$NODE:$WORKING_PATH/$DEPLOY_ENV/configs/$CONFIG_FILE_NAME.${CONFIG_FILE_EXTENSION};
+    #     fi
+    #     if [ ! -z "$SP_FILE_NAME" ];
+    #     then
+    #       export SP_ENV=$(echo ${DEPLOY_ENV}| cut -d'_' -f 1) 
+    #       export SP_FILE=$SP_FILE_NAME.${SP_ENV}.$SP_FILE_EXTENSION;
+    #       scp -P $NODE_PORT -o ProxyCommand="${PROXY_SSH_COMMAND}" $SP_FILE_PATH/$SP_FILE $SERVER_USER@$NODE:$WORKING_PATH/$DEPLOY_ENV/configs/$SP_FILE_NAME.$SP_FILE_EXTENSION;
+    #     fi
+    #     scp -P $NODE_PORT -o ProxyCommand="${PROXY_SSH_COMMAND}" $DOCKER_COMPOSE_FILE_PATH/$DOCKER_COMPOSE_FILE $SERVER_USER@$NODE:$WORKING_PATH/$DEPLOY_ENV/docker-compose.yml;
+    #     ssh -o ProxyCommand="${PROXY_SSH_COMMAND}" -o StrictHostKeyChecking=no -p $NODE_PORT $SERVER_USER@$NODE  docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL;
+    #     ssh -o ProxyCommand="${PROXY_SSH_COMMAND}" -o StrictHostKeyChecking=no -p $NODE_PORT $SERVER_USER@$NODE  "cd $WORKING_PATH/$DEPLOY_ENV && docker-compose pull";
+    #   done

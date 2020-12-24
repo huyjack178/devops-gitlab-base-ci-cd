@@ -1,0 +1,90 @@
+include:
+  - project: 'ci/common-ci'
+    ref: rocketor
+    file: 'docker/base/before-script-docker.gitlab-ci.yml'
+  - project: 'ci/common-ci'
+    ref: rocketor
+    file: 'docker/deploy.gitlab-ci.yml'
+  - project: 'ci/common-ci'
+    ref: rocketor
+    file: 'docker/base/deploy-stack-swarm.gitlab-ci.yml'
+
+.deploy:local:swarm:stack:
+  extends:
+    - .deploy:local
+    - .base_deploy_stack_swarm
+
+.deploy:local1:swarm:stack:
+  extends:
+    - .deploy:local1
+    - .base_deploy_stack_swarm
+
+.deploy:local2:swarm:stack:
+  extends:
+    - .deploy:local2
+    - .base_deploy_stack_swarm
+
+.deploy:local3:swarm:stack:
+  extends:
+    - .deploy:local3
+    - .base_deploy_stack_swarm
+
+.deploy:sit:swarm:stack:
+  extends:
+    - .deploy:sit
+    - .base_deploy_stack_swarm
+
+.deploy:sit1:swarm:stack:
+  extends:
+    - .deploy:sit1
+    - .base_deploy_stack_swarm
+
+.deploy:sit2:swarm:stack:
+  extends:
+    - .deploy:sit2
+    - .base_deploy_stack_swarm
+
+.deploy:sit3:swarm:stack:
+  extends:
+    - .deploy:sit3
+    - .base_deploy_stack_swarm
+
+.deploy:uat:swarm:stack:
+  extends:
+    - .deploy:uat
+    - .base_deploy_stack_swarm
+
+.deploy:uat1:swarm:stack:
+  extends:
+    - .deploy:uat1
+    - .base_deploy_stack_swarm
+
+.deploy:uat2:swarm:stack:
+  extends:
+    - .deploy:uat2
+    - .base_deploy_stack_swarm
+
+.deploy:uat3:swarm:stack:
+  extends:
+    - .deploy:uat3
+    - .base_deploy_stack_swarm
+
+.deploy:prod:swarm:stack:
+  extends:
+    - .deploy:prod
+    - .base_deploy_stack_swarm
+
+.deploy:prod1:swarm:stack:
+  extends:
+    - .deploy:prod1
+    - .base_deploy_stack_swarm
+
+.deploy:prod2:swarm:stack:
+  extends:
+    - .deploy:prod2
+    - .base_deploy_stack_swarm
+
+.deploy:prod3:swarm:stack:
+  extends:
+    - .deploy:prod3
+    - .base_deploy_stack_swarm

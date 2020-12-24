@@ -1,0 +1,183 @@
+.if-deploy-local: &if-deploy-local
+  if: '$CI_COMMIT_TAG =~ /^deploy-local-*/'
+
+.if-deploy-local1: &if-deploy-local1
+  if: '$CI_COMMIT_TAG =~ /^deploy-local1-*/'
+
+.if-deploy-local2: &if-deploy-local2
+  if: '$CI_COMMIT_TAG =~ /^deploy-local2-*/'
+
+.if-deploy-local3: &if-deploy-local3
+  if: '$CI_COMMIT_TAG =~ /^deploy-local3-*/'
+
+.if-deploy-sit: &if-deploy-sit
+  if: '$CI_COMMIT_TAG =~ /^deploy-sit-*/'
+
+.if-deploy-sit1: &if-deploy-sit1
+  if: '$CI_COMMIT_TAG =~ /^deploy-sit1-*/'
+
+.if-deploy-sit2: &if-deploy-sit2
+  if: '$CI_COMMIT_TAG =~ /^deploy-sit2-*/'
+
+.if-deploy-sit3: &if-deploy-sit3
+  if: '$CI_COMMIT_TAG =~ /^deploy-sit3-*/'
+
+.if-deploy-uat: &if-deploy-uat
+  if: '$CI_COMMIT_TAG =~ /^deploy-uat-*/'
+
+.if-deploy-uat1: &if-deploy-uat1
+  if: '$CI_COMMIT_TAG =~ /^deploy-uat1-*/'
+
+.if-deploy-uat2: &if-deploy-uat2
+  if: '$CI_COMMIT_TAG =~ /^deploy-uat2-*/'
+
+.if-deploy-uat3: &if-deploy-uat3
+  if: '$CI_COMMIT_TAG =~ /^deploy-uat3-*/'
+
+.if-deploy-prod: &if-deploy-prod
+  if: '$CI_COMMIT_TAG =~ /^deploy-prod-*/'
+
+.if-deploy-prod1: &if-deploy-prod1
+  if: '$CI_COMMIT_TAG =~ /^deploy-prod1-*/'
+
+.if-deploy-prod2: &if-deploy-prod2
+  if: '$CI_COMMIT_TAG =~ /^deploy-prod2-*/'
+
+.if-deploy-prod3: &if-deploy-prod3
+  if: '$CI_COMMIT_TAG =~ /^deploy-prod3-*/'
+
+.build:image:rules:
+  rules:
+    - <<: *if-deploy-local
+      when: always
+    - <<: *if-deploy-local1
+      when: always
+    - <<: *if-deploy-local2
+      when: always
+    - <<: *if-deploy-local3
+      when: always
+    - <<: *if-deploy-sit
+      when: always
+    - <<: *if-deploy-sit1
+      when: always
+    - <<: *if-deploy-sit2
+      when: always
+    - <<: *if-deploy-sit3
+      when: always
+    - <<: *if-deploy-uat
+      when: always
+    - <<: *if-deploy-uat1
+      when: always
+    - <<: *if-deploy-uat2
+      when: always
+    - <<: *if-deploy-uat3
+      when: always
+    - <<: *if-deploy-prod
+      when: always
+    - <<: *if-deploy-prod1
+      when: always
+    - <<: *if-deploy-prod2
+      when: always
+    - <<: *if-deploy-prod3
+      when: always
+
+.deploy:local:rules:
+  rules:
+    - <<: *if-deploy-local
+      when: on_success
+    - when: never
+
+.deploy:local1:rules:
+  rules:
+    - <<: *if-deploy-local1
+      when: on_success
+    - when: never
+
+.deploy:local2:rules:
+  rules:
+    - <<: *if-deploy-local2
+      when: on_success
+    - when: never
+
+.deploy:local3:rules:
+  rules:
+    - <<: *if-deploy-local3
+      when: on_success
+    - when: never
+
+.deploy:sit:rules:
+  rules:
+    - <<: *if-deploy-sit
+      when: on_success
+    - when: never
+
+.deploy:sit1:rules:
+  rules:
+    - <<: *if-deploy-sit1
+      when: on_success
+    - when: never
+
+.deploy:sit2:rules:
+  rules:
+    - <<: *if-deploy-sit2
+      when: on_success
+    - when: never
+
+.deploy:sit3:rules:
+  rules:
+    - <<: *if-deploy-sit3
+      when: on_success
+    - when: never
+
+.deploy:uat:rules:
+  rules:
+    - <<: *if-deploy-uat
+      when: on_success
+    - when: never
+
+.deploy:uat1:rules:
+  rules:
+    - <<: *if-deploy-uat1
+      when: on_success
+    - when: never
+
+.deploy:uat2:rules:
+  rules:
+    - <<: *if-deploy-uat2
+      when: on_success
+    - when: never
+
+.deploy:uat3:rules:
+  rules:
+    - <<: *if-deploy-uat3
+      when: on_success
+    - when: never
+
+.deploy:prod:rules:
+  rules:
+    - <<: *if-deploy-prod
+      when: on_success
+    - when: never
+
+.deploy:prod1:rules:
+  rules:
+    - <<: *if-deploy-prod1
+      when: on_success
+    - when: never
+
+.deploy:prod2:rules:
+  rules:
+    - <<: *if-deploy-prod2
+      when: on_success
+    - when: never
+
+.deploy:prod3:rules:
+  rules:
+    - <<: *if-deploy-prod3
+      when: on_success
+    - when: never
+
+.deploy:prod-auto:rules:
+  rules:
+    - <<: *if-deploy-prod
+      when: always

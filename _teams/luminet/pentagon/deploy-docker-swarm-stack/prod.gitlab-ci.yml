@@ -1,0 +1,35 @@
+.deploy:prod:base:swarm:stack:
+  extends:
+    - .deploy:prod:swarm:stack
+  variables:
+    SERVER_IP: $SC_SWARM_LEADER_PROD
+    SERVER_USER: $SC_SWARM_LEADER_PROD_SSH_USER
+    SERVER_PORT: $SC_SWARM_LEADER_PROD_SSH_PORT
+    SWARM_NODES: $SC_SWARM_CLUSTER_PROD
+
+.deploy:prod1:base:swarm:stack:
+  extends:
+    - .deploy:prod1:swarm:stack
+  variables:
+    SERVER_IP: $SC_SWARM_LEADER_PROD
+    SERVER_USER: $SC_SWARM_LEADER_PROD_SSH_USER
+    SERVER_PORT: $SC_SWARM_LEADER_PROD_SSH_PORT
+    SWARM_NODES: $SC_SWARM_CLUSTER_PROD
+
+.deploy:prod2:base:swarm:stack:
+  extends:
+    - .deploy:prod2:swarm:stack
+  variables:
+    SERVER_IP: $SC_SWARM_LEADER_PROD
+    SERVER_USER: $SC_SWARM_LEADER_PROD_SSH_USER
+    SERVER_PORT: $SC_SWARM_LEADER_PROD_SSH_PORT
+    SWARM_NODES: $SC_SWARM_CLUSTER_PROD
+
+.deploy:prod3:base:swarm:stack:
+  extends:
+    - .deploy:prod3:swarm:stack
+  variables:
+    SERVER_IP: $SC_SWARM_LEADER_PROD
+    SERVER_USER: $SC_SWARM_LEADER_PROD_SSH_USER
+    SERVER_PORT: $SC_SWARM_LEADER_PROD_SSH_PORT
+    SWARM_NODES: $SC_SWARM_CLUSTER_PROD

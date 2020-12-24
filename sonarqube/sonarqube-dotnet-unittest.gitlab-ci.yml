@@ -1,3 +1,13 @@
+.if-deploy-local: &if-deploy-local
+  if: '$CI_COMMIT_TAG =~ /local/'
+
+.if-deploy-sit: &if-deploy-sit
+  if: '$CI_COMMIT_TAG =~ /sit/'
+
+.if-deploy-uat: &if-deploy-uat
+  if: '$CI_COMMIT_TAG =~ /uat/'
+
+
 variables:
   SONAR_USER_HOME: '${CI_PROJECT_DIR}/.sonar' # Defines the location of the analysis task cache
   GIT_DEPTH: 0 # Tells git to fetch all the branches of the project, required by the analysis task
@@ -24,3 +34,11 @@ scan-sonarqube-dotnet:
     - dotnet build $SOLUTION_NAME
     - dotnet sonarscanner end /d:sonar.login=$SONAR_TOKEN
   allow_failure: true
+  rules:
+    - <<: *if-deploy-local
+      when: never
+    - <<: *if-deploy-sit
+      when: never
+    - <<: *if-deploy-uat
+      when: never
+    - when: always
