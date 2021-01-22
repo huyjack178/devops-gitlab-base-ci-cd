@@ -1,0 +1,14 @@
+unit-test-js:
+  stage: test
+  image: registry.nexdev.net:5050/docker/node:14.15
+  tags:
+    - docker
+  before_script:
+    - npm i
+    - npm run test
+  script:
+    - npm run test-coverage
+  artifacts:
+    when: always
+    paths:
+      - ./coverage
