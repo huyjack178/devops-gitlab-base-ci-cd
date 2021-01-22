@@ -9,16 +9,16 @@ unit-test-dotnet:
   script:
     - dotnet build
     - dotnet test --test-adapter-path:. --logger:"trx" || true
-    - for path in $(find ./ -name '*Tests.dll'); 
-      do 
-        if echo $path | grep 'bin'; 
-        then 
-          coverlet $path --target "dotnet" --targetargs "test --no-build" --format opencover; 
-        fi
+    - for path in $(find ./ -name '*Tests.dll');
+      do
+      if echo $path | grep 'bin';
+      then
+      coverlet $path --target "dotnet" --targetargs "test --no-build" --format opencover;
+      fi
       done
   artifacts:
     when: always
-    paths: 
+    paths:
       - ./**/*.trx
       - ./**/*coverage.opencover.xml
-
+    expire_in: 1 day

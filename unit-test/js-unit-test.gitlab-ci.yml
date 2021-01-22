@@ -14,3 +14,4 @@ unit-test-js:
     paths:
       - ./coverage
       - ./reports
+    expire_in: 1 day
