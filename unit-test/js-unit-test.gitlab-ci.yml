@@ -4,6 +4,7 @@ unit-test-js:
   tags:
     - docker
   before_script:
+    - npm run reg
     - npm i
     - npm run test
   script:
