@@ -28,5 +28,6 @@ sonarqube-check:
       -Dsonar.projectVersion="${CI_COMMIT_REF_NAME} ($CI_COMMIT_SHORT_SHA) [${CI_JOB_ID}]"
       -Dproject.settings=./sonarqube.analysis.properties
       -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
+      -Dsonar.testExecutionReportPaths=./reports/test-reporter.xml
       -Dsonar.sources=.
   allow_failure: true
