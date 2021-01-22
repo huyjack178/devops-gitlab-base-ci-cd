@@ -19,6 +19,7 @@ sonarqube-check:
       else
       echo "$PROJECT_NAME";
       fi
+    - npm run reg
   script:
     - npm install typescript
     - sonar-scanner
