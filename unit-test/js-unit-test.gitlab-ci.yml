@@ -12,3 +12,4 @@ unit-test-js:
     when: always
     paths:
       - ./coverage
+      - ./reports
