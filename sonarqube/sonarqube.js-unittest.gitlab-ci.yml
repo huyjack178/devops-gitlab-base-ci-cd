@@ -7,7 +7,7 @@ cache:
     - .sonar/cache
 
 sonarqube-check:
-  stage: test
+  stage: post-test
   needs: ['unit-test-js']
   image:
     name: sonarsource/sonar-scanner-cli:latest
