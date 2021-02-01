@@ -54,10 +54,20 @@
       fi
     - export CREATE_SERVICE_CMD="${CREATE_SERVICE_CMD} $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION"
     - echo $CREATE_SERVICE_CMD
-    - ssh -o ProxyCommand="${PROXY_SSH_COMMAND}" -o StrictHostKeyChecking=no -p $SERVER_PORT $SERVER_USER@$SERVER_IP
-        "docker service ls | grep $DOCKER_SERVICE_NAME-$DEPLOY_ENV
-        && echo "Updating service"
-        && docker service update --label-add io.portainer.accesscontrol.teams=PENTAGON --image $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $DOCKER_SERVICE_NAME-$DEPLOY_ENV
-        || (echo "Creating service" && $CREATE_SERVICE_CMD)"
+    - >
+      if [ "$DEPLOY_ENV" == "PROD" ];
+      then
+        ssh -o ProxyCommand="${PROXY_SSH_COMMAND}" -o StrictHostKeyChecking=no -p $SERVER_PORT $SERVER_USER@$SERVER_IP
+          "docker service ls | grep $DOCKER_SERVICE_NAME-$DEPLOY_ENV
+          && echo "Updating service"
+          && docker service update --label-add io.portainer.accesscontrol.teams=PENTAGON_LEADERS --image $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $DOCKER_SERVICE_NAME-$DEPLOY_ENV
+          || (echo "Creating service" && $CREATE_SERVICE_CMD)";
+      else
+        ssh -o ProxyCommand="${PROXY_SSH_COMMAND}" -o StrictHostKeyChecking=no -p $SERVER_PORT $SERVER_USER@$SERVER_IP
+          "docker service ls | grep $DOCKER_SERVICE_NAME-$DEPLOY_ENV
+          && echo "Updating service"
+          && docker service update --label-add io.portainer.accesscontrol.teams=PENTAGON --image $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_VERSION $DOCKER_SERVICE_NAME-$DEPLOY_ENV
+          || (echo "Creating service" && $CREATE_SERVICE_CMD)";
+      fi
   tags:
     - docker
