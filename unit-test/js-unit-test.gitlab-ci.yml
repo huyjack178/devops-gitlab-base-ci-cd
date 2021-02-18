@@ -5,7 +5,7 @@ unit-test-js:
     - docker
   before_script:
     - npm run reg
-    - npm i
+    - yarn install
     - npm run test
   script:
     - npm run test-coverage
