@@ -31,6 +31,6 @@ sonarqube-check:
       -Dsonar.testExecutionReportPaths=./reports/test-reporter.xml
       -Dsonar.sources=./src
       -Dsonar.tests=./src
-      -Dsonar.test.inclusions=**/__test__/**
-      -Dsonar.exclusions=**/__test__/**
+      -Dsonar.test.inclusions=**/__tests__/**
+      -Dsonar.exclusions=**/__tests__/**
   allow_failure: true
