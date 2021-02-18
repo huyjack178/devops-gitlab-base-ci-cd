@@ -30,5 +30,7 @@ sonarqube-check:
       -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
       -Dsonar.testExecutionReportPaths=./reports/test-reporter.xml
       -Dsonar.sources=./src
-      -Dsonar.tests=./tests
+      -Dsonar.tests=./src
+      -Dsonar.test.inclusions=**/__test__/**
+      -Dsonar.exclusions=**/__test__/**
   allow_failure: true
