@@ -1,6 +1,6 @@
 publish_npm:
     stage: publish
-    image: node:14
+    image: registry.nexdev.net:5050/docker/node:14.15
     needs: ["sonarqube-check"]
     before_script:
         - apt-get update
