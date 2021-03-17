@@ -11,6 +11,7 @@ publish_npm:
         - npm-cli-login -u $NPM_LUMI_USER_NAME -p $NPM_LUMI_USER_PASSWORD -e $NPM_LUMI_USER_EMAIL -r $NPM_LUMI_HOST
         - npm set registry $NPM_LUMI_HOST
         - npm i
+        - npm run reg
         - npx semantic-release
     tags:
         - docker
