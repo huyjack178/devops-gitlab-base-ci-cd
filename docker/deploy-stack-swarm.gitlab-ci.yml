@@ -88,3 +88,23 @@ include:
   extends:
     - .deploy:prod3
     - .base_deploy_stack_swarm
+
+.deploy:aws:swarm:stack:
+  extends:
+    - .deploy:aws
+    - .base_deploy_stack_swarm
+
+.deploy:aws1:swarm:stack:
+  extends:
+    - .deploy:aws1
+    - .base_deploy_stack_swarm
+
+.deploy:aws2:swarm:stack:
+  extends:
+    - .deploy:aws2
+    - .base_deploy_stack_swarm
+
+.deploy:aws3:swarm:stack:
+  extends:
+    - .deploy:aws3
+    - .base_deploy_stack_swarm

@@ -1,0 +1,35 @@
+.deploy:aws:base:swarm:stack:
+  extends:
+    - .deploy:aws:swarm:stack
+  variables:
+    SERVER_IP: $NEXCEL_SWARM_LEADER_AWS
+    SERVER_USER: $NEXCEL_SWARM_LEADER_AWS_SSH_USER
+    SERVER_PORT: $NEXCEL_SWARM_LEADER_AWS_SSH_PORT
+    SWARM_NODES: $NEXCEL_SWARM_CLUSTER_AWS
+
+.deploy:aws1:base:swarm:stack:
+  extends:
+    - .deploy:aws1:swarm:stack
+  variables:
+    SERVER_IP: $NEXCEL_SWARM_LEADER_AWS
+    SERVER_USER: $NEXCEL_SWARM_LEADER_AWS_SSH_USER
+    SERVER_PORT: $NEXCEL_SWARM_LEADER_AWS_SSH_PORT
+    SWARM_NODES: $NEXCEL_SWARM_CLUSTER_AWS
+
+.deploy:aws2:base:swarm:stack:
+  extends:
+    - .deploy:aws2:swarm:stack
+  variables:
+    SERVER_IP: $NEXCEL_SWARM_LEADER_AWS
+    SERVER_USER: $NEXCEL_SWARM_LEADER_AWS_SSH_USER
+    SERVER_PORT: $NEXCEL_SWARM_LEADER_AWS_SSH_PORT
+    SWARM_NODES: $NEXCEL_SWARM_CLUSTER_AWS
+
+.deploy:aws3:base:swarm:stack:
+  extends:
+    - .deploy:aws3:swarm:stack
+  variables:
+    SERVER_IP: $NEXCEL_SWARM_LEADER_AWS
+    SERVER_USER: $NEXCEL_SWARM_LEADER_AWS_SSH_USER
+    SERVER_PORT: $NEXCEL_SWARM_LEADER_AWS_SSH_PORT
+    SWARM_NODES: $NEXCEL_SWARM_CLUSTER_AWS

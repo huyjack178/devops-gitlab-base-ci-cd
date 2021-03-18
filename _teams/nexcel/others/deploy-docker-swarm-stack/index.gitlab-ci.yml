@@ -17,3 +17,6 @@ include:
   - project: 'ci/common-ci'
     ref: rocketor
     file: '_teams/nexcel/others/deploy-docker-swarm-stack/prod.gitlab-ci.yml'
+  - project: 'ci/common-ci'
+    ref: rocketor
+    file: '_teams/nexcel/others/deploy-docker-swarm-stack/aws.gitlab-ci.yml'

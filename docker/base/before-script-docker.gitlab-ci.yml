@@ -36,6 +36,7 @@ before_script:
     else
     export DOCKER_FILE_PATH=$DOCKER_FILE_PATH;
     fi
+  - echo $CONFIG_FILE
   - echo $DOCKER_FILE_PATH
   - if [ "$DOCKER_FILE_NAME" == "" ]; then
     export DOCKER_FILE_NAME="Dockerfile";
@@ -50,14 +51,15 @@ before_script:
     fi
   - echo $DOCKER_NETWORK_NAME
   - if echo "$DEPLOY_ENV" | grep -q "LOCAL"; then
-    export PROXY_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -p $LOCAL_PROXY_SSH_PORT -W %h:%p -q $LOCAL_PROXY_USER@$LOCAL_PROXY_SERVER";
     export DEPLOYMENT_API=$DEPLOYMENT_API_LOCAL;
     elif echo "$DEPLOY_ENV" | grep -q "SIT"; then
-    export PROXY_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -p $SIT_PROXY_SSH_PORT -W %h:%p -q $SIT_PROXY_USER@$SIT_PROXY_SERVER";
     export DEPLOYMENT_API=$DEPLOYMENT_API_SIT;
-    else
-    export PROXY_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -p $KBT_PROXY_SSH_PORT -W %h:%p -q $KBT_PROXY_USER@$KBT_PROXY_SERVER";
+    elif echo "$DEPLOY_ENV" | grep -q "UAT"; then
     export DEPLOYMENT_API=$DEPLOYMENT_API_UAT;
+    elif echo "$DEPLOY_ENV" | grep -q "PROD"; then
+    export DEPLOYMENT_API=$DEPLOYMENT_API_PROD;
+    else
+    export DEPLOYMENT_API=$DEPLOYMENT_API_AWS;
     fi
   - echo $PROXY_SSH_COMMAND
   - if [ "$SERVICE_NAME" == "" ]; then

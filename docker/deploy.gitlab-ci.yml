@@ -87,3 +87,29 @@ include:
   extends:
     - .deploy:prod-auto:rules
     - .env:prod
+
+.deploy:aws:
+  extends:
+    - .deploy:aws:rules
+    - .env:aws
+
+.deploy:aws1:
+  extends:
+    - .deploy:aws1:rules
+    - .env:aws1
+
+.deploy:aws2:
+  extends:
+    - .deploy:aws2:rules
+    - .env:aws2
+
+.deploy:aws3:
+  extends:
+    - .deploy:aws3:rules
+    - .env:aws3
+
+.deploy:aws:auto:
+  extends:
+    - .deploy:aws-auto:rules
+    - .env:aws
+

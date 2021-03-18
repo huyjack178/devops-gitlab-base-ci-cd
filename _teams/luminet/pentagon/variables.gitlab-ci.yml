@@ -36,3 +36,10 @@ variables:
   SC_SWARM_LEADER_PROD_SSH_USER: vndeployer
   SC_SWARM_NETWORK_PROD: swarm_luminet_prod
   DEPLOYMENT_API_PROD: https://deploymentapi.starixuat.com
+
+  SC_SWARM_CLUSTER_AWS: 10.2.189.2 10.2.189.3 10.2.189.4 10.2.189.5
+  SC_SWARM_LEADER_AWS: 10.2.189.2
+  SC_SWARM_LEADER_AWS_SSH_PORT: 22
+  SC_SWARM_LEADER_AWS_SSH_USER: vndeployer
+  SC_SWARM_NETWORK_AWS: swarm_luminet_aws
+  DEPLOYMENT_API_AWS: https://deployment-api.sportsfun.app

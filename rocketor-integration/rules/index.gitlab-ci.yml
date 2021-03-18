@@ -46,6 +46,18 @@
 .if-deploy-prod3: &if-deploy-prod3
   if: '$CI_COMMIT_TAG =~ /^deploy-prod3-*/'
 
+.if-deploy-aws: &if-deploy-aws
+  if: '$CI_COMMIT_TAG =~ /^deploy-aws-*/'
+
+.if-deploy-aws1: &if-deploy-aws1
+  if: '$CI_COMMIT_TAG =~ /^deploy-aws1-*/'
+
+.if-deploy-aws2: &if-deploy-aws2
+  if: '$CI_COMMIT_TAG =~ /^deploy-aws2-*/'
+
+.if-deploy-aws3: &if-deploy-aws3
+  if: '$CI_COMMIT_TAG =~ /^deploy-aws3-*/'
+
 .build:image:rules:
   rules:
     - <<: *if-deploy-local
@@ -180,4 +192,33 @@
 .deploy:prod-auto:rules:
   rules:
     - <<: *if-deploy-prod
+      when: always
+
+.deploy:aws:rules:
+  rules:
+    - <<: *if-deploy-aws
+      when: on_success
+    - when: never
+
+.deploy:aws1:rules:
+  rules:
+    - <<: *if-deploy-aws1
+      when: on_success
+    - when: never
+
+.deploy:aws2:rules:
+  rules:
+    - <<: *if-deploy-aws2
+      when: on_success
+    - when: never
+
+.deploy:aws3:rules:
+  rules:
+    - <<: *if-deploy-aws3
+      when: on_success
+    - when: never
+
+.deploy:aws-auto:rules:
+  rules:
+    - <<: *if-deploy-aws
       when: always
