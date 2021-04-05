@@ -29,6 +29,6 @@
     - curl -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker service rm ${SERVICE_NAME}_${DEPLOY_ENV} || true" $DEPLOYMENT_API/command
     - curl -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker config rm ${SERVICE_NAME}_${DEPLOY_ENV}_config || true" $DEPLOYMENT_API/command;
     - curl -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker config rm ${SERVICE_NAME}_${DEPLOY_ENV}_sp_config || true" $DEPLOYMENT_API/command;
-    - curl -v --fail --show-error -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="cd $WORKING_PATH/$DEPLOY_ENV  && docker stack deploy --compose-file=docker-compose.yml --with-registry-auth $STACK_NAME" $DEPLOYMENT_API/command;
+    - curl -v -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="cd $WORKING_PATH/$DEPLOY_ENV  && docker stack deploy --compose-file=docker-compose.yml --with-registry-auth $STACK_NAME" $DEPLOYMENT_API/command;
   tags:
     - docker
