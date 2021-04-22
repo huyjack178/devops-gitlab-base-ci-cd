@@ -1,8 +1,8 @@
 .base_deploy_stack_swarm:
   stage: deploy
   script:
-    - curl --fail -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN || exit 1
-    - curl --fail -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="mkdir -p $WORKING_PATH/$DEPLOY_ENV/configs" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN || exit 1
+    - curl -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN
+    - curl --fail -F jobid=$CI_JOB_ID -F env=$DEPLOY_ENV -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="mkdir -p $WORKING_PATH/$DEPLOY_ENV/configs" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN
     - echo "===========Transform docker-compose.yml=============";
     - export DOCKER_COMPOSE_FILE=${DEPLOY_ENV}.$DOCKER_COMPOSE_FILE_NAME.yml;
     - echo $DOCKER_COMPOSE_FILE
@@ -10,23 +10,23 @@
     - git clone $DOCKER_COMPOSE_REPO_URL compose_repo
     - cp compose_repo/$DOCKER_COMPOSE_REPO_PATH/$DOCKER_COMPOSE_FILE $DOCKER_COMPOSE_FILE_PATH
     - echo "===========Sync docker-compose.yml============="
-    - curl --fail -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F remotePath="$WORKING_PATH/$DEPLOY_ENV/docker-compose.yml" -F file=@"$DOCKER_COMPOSE_FILE_PATH/$DOCKER_COMPOSE_FILE" $DEPLOYMENT_API/scp?token=$DEPLOY_API_TOKEN || exit 1
+    - curl --fail -F jobid=$CI_JOB_ID -F env=$DEPLOY_ENV -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F remotePath="$WORKING_PATH/$DEPLOY_ENV/docker-compose.yml" -F file=@"$DOCKER_COMPOSE_FILE_PATH/$DOCKER_COMPOSE_FILE" $DEPLOYMENT_API/scp?token=$DEPLOY_API_TOKEN
     - echo "===========Sync configs============="
     - echo $CONFIG_FILE_PATH/$CONFIG_FILE
     - ls -l $CONFIG_FILE_PATH
     - if [ ! -z "$CONFIG_FILE_NAME" ];
       then
-        curl --fail -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F remotePath="$WORKING_PATH/$DEPLOY_ENV/configs/$CONFIG_DEST_FILE" -F file=@"$CONFIG_FILE_PATH/$CONFIG_FILE" $DEPLOYMENT_API/scp?token=$DEPLOY_API_TOKEN || exit 1;
+        curl --fail -F jobid=$CI_JOB_ID -F env=$DEPLOY_ENV -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F remotePath="$WORKING_PATH/$DEPLOY_ENV/configs/$CONFIG_DEST_FILE" -F file=@"$CONFIG_FILE_PATH/$CONFIG_FILE" $DEPLOYMENT_API/scp?token=$DEPLOY_API_TOKEN;
       fi
     - if [ ! -z "$SP_FILE_NAME" ];
       then
         export SP_ENV=$(echo ${DEPLOY_ENV}| cut -d'_' -f 1);
         export SP_FILE=$SP_FILE_NAME.${SP_ENV}.$SP_FILE_EXTENSION;
-        curl --fail -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F remotePath="$WORKING_PATH/$DEPLOY_ENV/configs/$SP_FILE_NAME.$SP_FILE_EXTENSION" -F file=@"$SP_FILE_PATH/$SP_FILE" $DEPLOYMENT_API/scp?token=$DEPLOY_API_TOKEN || exit 1;
+        curl --fail -F jobid=$CI_JOB_ID -F env=$DEPLOY_ENV -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F remotePath="$WORKING_PATH/$DEPLOY_ENV/configs/$SP_FILE_NAME.$SP_FILE_EXTENSION" -F file=@"$SP_FILE_PATH/$SP_FILE" $DEPLOYMENT_API/scp?token=$DEPLOY_API_TOKEN;
       fi
-    - curl --fail -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker service rm ${SERVICE_NAME}_${DEPLOY_ENV} || true" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN || exit 1
-    - curl --fail -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker config rm ${SERVICE_NAME}_${DEPLOY_ENV}_config || true" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN || exit 1;
-    - curl --fail -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker config rm ${SERVICE_NAME}_${DEPLOY_ENV}_sp_config || true" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN || exit 1;
-    - curl --fail -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="cd $WORKING_PATH/$DEPLOY_ENV  && docker stack deploy --compose-file=docker-compose.yml --with-registry-auth $STACK_NAME" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN || exit 1;
+    - curl -F jobid=$CI_JOB_ID -F env=$DEPLOY_ENV -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker service rm ${SERVICE_NAME}_${DEPLOY_ENV} || true" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN
+    - curl -F jobid=$CI_JOB_ID -F env=$DEPLOY_ENV -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker config rm ${SERVICE_NAME}_${DEPLOY_ENV}_config || true" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN;
+    - curl -F jobid=$CI_JOB_ID -F env=$DEPLOY_ENV -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker config rm ${SERVICE_NAME}_${DEPLOY_ENV}_sp_config || true" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN;
+    - curl --fail -F jobid=$CI_JOB_ID -F env=$DEPLOY_ENV -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="cd $WORKING_PATH/$DEPLOY_ENV  && docker stack deploy --compose-file=docker-compose.yml --with-registry-auth $STACK_NAME" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN;
   tags:
     - docker
