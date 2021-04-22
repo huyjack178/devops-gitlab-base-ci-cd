@@ -28,5 +28,7 @@
     - curl -F jobid=$CI_JOB_ID -F env=$DEPLOY_ENV -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker config rm ${SERVICE_NAME}_${DEPLOY_ENV}_config || true" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN;
     - curl -F jobid=$CI_JOB_ID -F env=$DEPLOY_ENV -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker config rm ${SERVICE_NAME}_${DEPLOY_ENV}_sp_config || true" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN;
     - curl --fail -F jobid=$CI_JOB_ID -F env=$DEPLOY_ENV -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="cd $WORKING_PATH/$DEPLOY_ENV  && docker stack deploy --compose-file=docker-compose.yml --with-registry-auth $STACK_NAME" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN;
+  after_script:
+    - curl --request DELETE --header "PRIVATE-TOKEN:$CI_JOB_TOKEN" $GITLAB_API_URL/projects/$CI_PROJECT_ID/repository/tags/$CI_COMMIT_TAG
   tags:
     - docker
