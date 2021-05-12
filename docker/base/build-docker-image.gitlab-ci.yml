@@ -74,3 +74,27 @@ build_image:
     - docker push $CI_REGISTRY_IMAGE:builder
   tags:
     - docker
+
+.build:default:image:multistage:
+  stage: build
+  script:
+    - echo $DOCKER_FILE_PATH
+    - docker login -u $DOCKER_REG_USERNAME -p $DOCKER_REG_PASSWORD $DOCKER_REG_URL
+    - docker pull $CI_REGISTRY_IMAGE:builder || true
+    - docker build
+      --target builder
+      --cache-from $CI_REGISTRY_IMAGE:builder
+      -f $DOCKER_FILE_PATH/$DOCKER_FILE_NAME
+      --tag $CI_REGISTRY_IMAGE:builder .
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker build
+      --cache-from $CI_REGISTRY_IMAGE:latest
+      --cache-from $CI_REGISTRY_IMAGE:builder
+      -f $DOCKER_FILE_PATH/$DOCKER_FILE_NAME
+      --tag $CI_REGISTRY_IMAGE:$DEPLOY_ENV-$CI_REGISTRY_IMAGE_VERSION
+      --build-arg DEPLOY_ENV=$DEPLOY_ENV .
+    - docker push $CI_REGISTRY_IMAGE:$DEPLOY_ENV-$CI_REGISTRY_IMAGE_VERSION
+    - docker tag $CI_REGISTRY_IMAGE:$DEPLOY_ENV-$CI_REGISTRY_IMAGE_VERSION $CI_REGISTRY_IMAGE:$DEPLOY_ENV-latest
+    - docker push $CI_REGISTRY_IMAGE:$DEPLOY_ENV-latest
+  tags:
+    - docker
