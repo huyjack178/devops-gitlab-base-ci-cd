@@ -96,5 +96,6 @@ build_image:
     - docker push $CI_REGISTRY_IMAGE:$DEPLOY_ENV-$CI_REGISTRY_IMAGE_VERSION
     - docker tag $CI_REGISTRY_IMAGE:$DEPLOY_ENV-$CI_REGISTRY_IMAGE_VERSION $CI_REGISTRY_IMAGE:$DEPLOY_ENV-latest
     - docker push $CI_REGISTRY_IMAGE:$DEPLOY_ENV-latest
+    - docker push $CI_REGISTRY_IMAGE:builder
   tags:
     - docker
