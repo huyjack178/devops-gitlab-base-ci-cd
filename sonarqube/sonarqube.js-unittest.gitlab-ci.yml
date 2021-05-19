@@ -29,8 +29,9 @@ sonarqube-check:
       echo "$PROJECT_NAME";
       fi
     - npm run reg
+    - npm rebuild
+    - npm install -g typescript
   script:
-    - npm install typescript
     - sonar-scanner
       -Dsonar.qualitygate.wait=true
       -Dsonar.projectKey=$PROJECT_NAME

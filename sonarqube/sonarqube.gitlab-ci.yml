@@ -29,7 +29,7 @@ sonarqube-check:
       fi
   script:
     - npm set registry http://npm.lumigame.com
-    - npm install typescript
+    - npm install -g typescript
     - sonar-scanner -X -Dsonar.qualitygate.wait=true -Dsonar.projectKey=$PROJECT_NAME -Dsonar.projectVersion="${CI_COMMIT_REF_NAME} ($CI_COMMIT_SHORT_SHA) [${CI_JOB_ID}]" -Dproject.settings=./sonarqube.analysis.properties -Dsonar.sources=.
   allow_failure: true
   rules:
