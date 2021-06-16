@@ -27,6 +27,7 @@ unit-test-js:
     - <<: *if-deploy-uat
       when: never
     - when: always
+  allow_failure: true
   artifacts:
     when: always
     paths:
