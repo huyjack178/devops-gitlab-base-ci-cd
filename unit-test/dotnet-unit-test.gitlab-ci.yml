@@ -1,3 +1,12 @@
+.if-deploy-local: &if-deploy-local
+  if: '$CI_COMMIT_TAG =~ /local/'
+
+.if-deploy-sit: &if-deploy-sit
+  if: '$CI_COMMIT_TAG =~ /sit/'
+
+.if-deploy-uat: &if-deploy-uat
+  if: '$CI_COMMIT_TAG =~ /uat/'
+  
 unit-test-dotnet:
   stage: test
   image: git3.nexdev.net:5050/lumi-ops/docker-images/dotnet/core/sdk:3.1
@@ -22,3 +31,11 @@ unit-test-dotnet:
       - ./**/*.trx
       - ./**/*coverage.opencover.xml
     expire_in: 1 day
+  rules:
+    - <<: *if-deploy-local
+      when: never
+    - <<: *if-deploy-sit
+      when: never
+    - <<: *if-deploy-uat
+      when: never
+    - when: always
