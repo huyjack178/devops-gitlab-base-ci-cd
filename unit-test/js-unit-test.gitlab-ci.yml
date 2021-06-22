@@ -1,3 +1,13 @@
+.if-deploy-local: &if-deploy-local
+  if: '$CI_COMMIT_TAG =~ /local/'
+
+.if-deploy-sit: &if-deploy-sit
+  if: '$CI_COMMIT_TAG =~ /sit/'
+
+.if-deploy-uat: &if-deploy-uat
+  if: '$CI_COMMIT_TAG =~ /uat/'
+
+
 unit-test-js:
   stage: test
   image: registry.nexdev.net:5050/docker/node:14.15
@@ -9,9 +19,19 @@ unit-test-js:
     - npm run test
   script:
     - npm run test-coverage
+  rules:
+    - <<: *if-deploy-local
+      when: never
+    - <<: *if-deploy-sit
+      when: never
+    - <<: *if-deploy-uat
+      when: never
+    - when: always
+  allow_failure: true
   artifacts:
     when: always
     paths:
       - ./coverage
       - ./reports
     expire_in: 1 day
+

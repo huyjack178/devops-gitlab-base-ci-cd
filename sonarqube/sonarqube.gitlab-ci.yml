@@ -18,7 +18,7 @@ cache:
 sonarqube-check:
   stage: test
   image:
-    name: sonarsource/sonar-scanner-cli:latest
+    name: registry.nexdev.net:5050/docker/sonarsource/sonar-scanner-cli:latest
   before_script:
     - echo "===========Start Sonar Scanner============="
     - if [ "$PROJECT_NAME" == "" ];
@@ -29,8 +29,8 @@ sonarqube-check:
       fi
   script:
     - npm set registry http://npm.lumigame.com
-    - npm install typescript
-    - sonar-scanner -X -Dsonar.qualitygate.wait=true -Dsonar.projectKey=$PROJECT_NAME -Dsonar.projectVersion="${CI_COMMIT_REF_NAME} ($CI_COMMIT_SHORT_SHA) [${CI_JOB_ID}]" -Dproject.settings=./sonarqube.analysis.properties -Dsonar.sources=.
+    - npm install -g typescript
+    - sonar-scanner -X -Dsonar.sourceEncoding=UTF-8 -Dsonar.qualitygate.wait=true -Dsonar.projectKey=$PROJECT_NAME -Dsonar.projectVersion="${CI_COMMIT_REF_NAME} ($CI_COMMIT_SHORT_SHA) [${CI_JOB_ID}]" -Dproject.settings=./sonarqube.analysis.properties -Dsonar.sources=.
   allow_failure: true
   rules:
     - <<: *if-deploy-local

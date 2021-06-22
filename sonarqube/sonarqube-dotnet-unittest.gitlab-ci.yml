@@ -25,7 +25,7 @@ scan-sonarqube-dotnet:
     - echo "===========Start Sonar Scanner============="
   script:
     - ls
-    - dotnet sonarscanner begin /k:$SERVICE_NAME
+    - dotnet sonarscanner begin /k:$PROJECT_NAME
       /v:"${CI_COMMIT_REF_NAME} ($CI_COMMIT_SHORT_SHA) [${CI_JOB_ID}]"
       /d:sonar.login=$SONAR_TOKEN
       /d:sonar.host.url=$SONAR_HOST_URL
