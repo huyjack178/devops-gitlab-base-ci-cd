@@ -1,4 +1,4 @@
-image: registry.nexdev.net:5050/docker/docker-engine/docker:19.03.14
+image: registry.nexdev.net:5050/docker/docker-engine/docker:20.10.7
 
 before_script:
   #  - docker info
