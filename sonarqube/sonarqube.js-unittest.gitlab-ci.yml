@@ -43,7 +43,7 @@ sonarqube-check:
       -Dsonar.sources=./src
       -Dsonar.tests=./src
       -Dsonar.test.inclusions=**/__tests__/**
-      -Dsonar.exclusions=**/__tests__/**
+      # -Dsonar.exclusions=**/__tests__/**
   allow_failure: true
   rules:
     - <<: *if-deploy-local
