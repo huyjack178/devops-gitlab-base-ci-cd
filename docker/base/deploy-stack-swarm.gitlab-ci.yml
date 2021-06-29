@@ -23,7 +23,12 @@
       fi
     - if [ ! -z "$SP_FILE_NAME" ];
       then
-        export SP_ENV=$(echo ${DEPLOY_ENV}| cut -d'_' -f 1);
+        echo $SP_FILE_COMPOSE;
+        if [ $SP_FILE_COMPOSE == "disabled" ]; then
+          export SP_ENV=${DEPLOY_ENV};
+        else
+          export SP_ENV=$(echo ${DEPLOY_ENV}| cut -d'_' -f 1);
+        fi;
         export SP_FILE=$SP_FILE_NAME.${SP_ENV}.$SP_FILE_EXTENSION;
         echo "===== SYNC $SP_FILE ... =====";
         curl -F jobid=$CI_JOB_ID -F env=$DEPLOY_ENV -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F remotePath="$WORKING_PATH/$DEPLOY_ENV/configs/$SP_FILE_NAME.$SP_FILE_EXTENSION" -F file=@"$SP_FILE_PATH/$SP_FILE" $DEPLOYMENT_API/scp?token=$DEPLOY_API_TOKEN;
@@ -34,9 +39,9 @@
     - echo "===== REMOVING OLD CONFIGS ... =====";
     - if [ ! -z "$SP_FILE_NAME" ];
       then
-        curl -F jobid=$CI_JOB_ID -F env=$DEPLOY_ENV -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker config rm $(docker config ls | grep ${SERVICE_NAME}_${DEPLOY_ENV}_sp_config) || true" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN;
+        curl -F jobid=$CI_JOB_ID -F env=$DEPLOY_ENV -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker config rm $(docker config ls | grep -e ${SERVICE_NAME}_${DEPLOY_ENV}_sp_config*) || true" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN;
       fi
-    - curl -F jobid=$CI_JOB_ID -F env=$DEPLOY_ENV -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker config rm $(docker config ls | grep ${SERVICE_NAME}_${DEPLOY_ENV}_config) || true" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN;
+    - curl -F jobid=$CI_JOB_ID -F env=$DEPLOY_ENV -F host=$SERVER_IP -F port=$SERVER_PORT -F user=$SERVER_USER -F command="docker config rm $(docker config ls | grep -e ${SERVICE_NAME}_${DEPLOY_ENV}_config*) || true" $DEPLOYMENT_API/command?token=$DEPLOY_API_TOKEN;
   after_script:
     - curl --request DELETE --header "PRIVATE-TOKEN:$CI_JOB_TOKEN" $GITLAB_API_URL/projects/$CI_PROJECT_ID/repository/tags/$CI_COMMIT_TAG
   tags:
