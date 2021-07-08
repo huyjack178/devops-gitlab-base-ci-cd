@@ -33,6 +33,7 @@ sonarqube-check:
     - npm install -g typescript
   script:
     - sonar-scanner
+      -X
       -Dsonar.sourceEncoding=UTF-8
       -Dsonar.qualitygate.wait=true
       -Dsonar.projectKey=$PROJECT_NAME

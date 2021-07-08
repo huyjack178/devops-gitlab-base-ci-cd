@@ -14,7 +14,7 @@ unit-test-js:
   tags:
     - docker
   before_script:
-    - npm run reg
+    - npm set registry http://npm.lumigame.com
     - yarn install
     - npm run test
   script:
