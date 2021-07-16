@@ -9,7 +9,7 @@
   
 unit-test-dotnet:
   stage: test
-  image: registry.nexdev.net:5050/docker/dotnet/core/sdk:3.1
+  image: registry.nexdev.net:5050/docker/dotnet/core/sdk:3.1-5
   tags:
     - docker
   before_script:
