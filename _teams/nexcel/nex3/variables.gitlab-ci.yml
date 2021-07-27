@@ -21,21 +21,21 @@ variables:
   NEX3_SWARM_LEADER_SIT_SSH_PORT: 22
   NEX3_SWARM_LEADER_SIT_SSH_USER: vndeployer
   NEX3_SWARM_NETWORK_SIT: swarm_nexcel_uat
-  DEPLOYMENT_API_SIT: https://deploymentapi.starixuat.com
+  DEPLOYMENT_API_SIT: https://stdeployapi.starixplay.com
 
   NEX3_SWARM_CLUSTER_UAT: 10.2.189.68
   NEX3_SWARM_LEADER_UAT: 10.2.189.41
   NEX3_SWARM_LEADER_UAT_SSH_PORT: 22
   NEX3_SWARM_LEADER_UAT_SSH_USER: vndeployer
   NEX3_SWARM_NETWORK_UAT: swarm_nexcel_uat
-  DEPLOYMENT_API_UAT: https://deploymentapi.starixuat.com
+  DEPLOYMENT_API_UAT: https://stdeployapi.starixplay.com
 
   NEX3_SWARM_CLUSTER_PROD: 10.2.189.66 10.2.189.67
   NEX3_SWARM_LEADER_PROD: 10.2.189.40
   NEX3_SWARM_LEADER_PROD_SSH_PORT: 22
   NEX3_SWARM_LEADER_PROD_SSH_USER: vndeployer
   NEX3_SWARM_NETWORK_PROD: swarm_nexcel_prod
-  DEPLOYMENT_API_PROD: https://deploymentapi.starixuat.com
+  DEPLOYMENT_API_PROD: https://stdeployapi.starixplay.com
 
   NEX3_SWARM_CLUSTER_AWS: 10.2.189.6 10.2.189.7
   NEX3_SWARM_LEADER_AWS: 10.2.189.6
