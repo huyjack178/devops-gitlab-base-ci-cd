@@ -28,6 +28,12 @@ sonarqube-check:
       else
       echo "$PROJECT_NAME";
       fi
+    - if [ "$SRC_PATH" == "" ];
+      then
+      export SRC_PATH=./src;
+      else
+      echo "$SRC_PATH";
+      fi
     - npm set registry http://npm.lumigame.com
     - npm rebuild
     - npm install -g typescript
